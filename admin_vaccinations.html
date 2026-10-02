@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Vaccinations | PetCare AI</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #f7faf8;
+            color: #26344c;
+        }
+
+        .layout {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* =========================
+           Sidebar
+        ========================= */
+
+        .sidebar {
+            width: 240px;
+            background: #ffffff;
+            color: #26344c;
+            border-right: 1px solid #edf0f5;
+            min-height: 100vh;
+            padding: 25px 16px;
+            position: fixed;
+            left: 0;
+            top: 0;
+            bottom: 0;
+        }
+
+        .logo {
+            font-size: 22px;
+            font-weight: bold;
+            color: #26344c;
+            margin-bottom: 8px;
+            padding-left: 10px;
+        }
+
+        .admin-label {
+            color: #8a94a4;
+            font-size: 12px;
+            padding-left: 10px;
+            margin-bottom: 25px;
+        }
+
+        .menu {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .menu a {
+            text-decoration: none;
+            color: #526078;
+            padding: 12px 14px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            gap: 11px;
+            font-size: 14px;
+            transition: 0.2s;
+        }
+
+        .menu a:hover {
+            background: #eefaf5;
+            color: #129762;
+        }
+
+        .menu a.active {
+            background: #dff5eb;
+            color: #109460;
+            font-weight: bold;
+        }
+
+        .menu-icon {
+            width: 22px;
+            text-align: center;
+        }
+
+        .admin-user {
+            position: absolute;
+            left: 16px;
+            right: 16px;
+            bottom: 75px;
+            background: #f1f6f3;
+            border: 1px solid #e4eee9;
+            border-radius: 14px;
+            padding: 13px;
+        }
+
+        .admin-user-title {
+            color: #8490a1;
+            font-size: 11px;
+            margin-bottom: 4px;
+        }
+
+        .admin-user-name {
+            color: #26344c;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .logout {
+            position: absolute;
+            left: 16px;
+            right: 16px;
+            bottom: 20px;
+            text-decoration: none;
+            color: #e84d78;
+            background: #fff0f4;
+            padding: 11px 14px;
+            border-radius: 12px;
+            text-align: center;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        /* =========================
+           Main
+        ========================= */
+
+        .main {
+            margin-left: 240px;
+            width: calc(100% - 240px);
+            padding: 35px;
+        }
+
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 28px;
+        }
+
+        .page-title {
+            font-size: 30px;
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+
+        .page-subtitle {
+            color: #8290a2;
+            font-size: 14px;
+        }
+
+        .summary-card {
+            background: #ffffff;
+            border: 1px solid #edf1ef;
+            border-radius: 18px;
+            padding: 20px 22px;
+            min-width: 170px;
+            box-shadow: 0 8px 25px rgba(35, 55, 70, 0.05);
+            text-align: center;
+        }
+
+        .summary-number {
+            font-size: 26px;
+            font-weight: bold;
+            color: #129762;
+        }
+
+        .summary-text {
+            margin-top: 5px;
+            color: #8490a1;
+            font-size: 13px;
+        }
+
+        /* =========================
+           Table Card
+        ========================= */
+
+        .card {
+            background: #ffffff;
+            border-radius: 20px;
+            border: 1px solid #edf1ef;
+            box-shadow: 0 10px 30px rgba(35, 55, 70, 0.06);
+            overflow: hidden;
+        }
+
+        .card-header {
+            padding: 22px 24px;
+            border-bottom: 1px solid #edf1ef;
+        }
+
+        .card-header h2 {
+            font-size: 18px;
+            margin-bottom: 5px;
+        }
+
+        .card-header p {
+            color: #8a94a4;
+            font-size: 13px;
+        }
+
+        .table-wrap {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 1050px;
+        }
+
+        th {
+            text-align: left;
+            background: #f8fbfa;
+            color: #68768a;
+            font-size: 12px;
+            padding: 15px 18px;
+            white-space: nowrap;
+        }
+
+        td {
+            padding: 16px 18px;
+            border-top: 1px solid #f0f2f4;
+            font-size: 13px;
+            color: #43516a;
+            vertical-align: middle;
+        }
+
+        tr:hover td {
+            background: #fcfefd;
+        }
+
+        /* User */
+
+        .user-name {
+            font-weight: bold;
+            color: #26344c;
+            margin-bottom: 4px;
+        }
+
+        .user-email {
+            font-size: 11px;
+            color: #98a2b1;
+        }
+
+        /* Pet */
+
+        .pet-box {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .pet-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            background: #effaf5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        .pet-name {
+            font-weight: bold;
+            color: #26344c;
+        }
+
+        .pet-type {
+            color: #98a2b1;
+            font-size: 11px;
+            margin-top: 3px;
+        }
+
+        /* Vaccine */
+
+        .vaccine-name {
+            font-weight: bold;
+            color: #26344c;
+        }
+
+        /* Dates */
+
+        .date-main {
+            color: #526078;
+            font-weight: 600;
+        }
+
+        .date-due {
+            color: #8c98a8;
+            font-size: 11px;
+            margin-top: 4px;
+        }
+
+        /* Status */
+
+        .status {
+            display: inline-block;
+            padding: 6px 11px;
+            border-radius: 30px;
+            font-size: 11px;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+
+        .status.upcoming {
+            background: #fff7df;
+            color: #c58b18;
+        }
+
+        .status.completed {
+            background: #e7f8ef;
+            color: #149764;
+        }
+
+        .status.not-set {
+            background: #f0f2f5;
+            color: #7a8594;
+        }
+
+        .notes {
+            max-width: 230px;
+            color: #718096;
+            line-height: 1.5;
+        }
+
+        /* Empty */
+
+        .empty {
+            text-align: center;
+            padding: 60px 20px;
+        }
+
+        .empty-icon {
+            font-size: 42px;
+            margin-bottom: 12px;
+        }
+
+        .empty h3 {
+            font-size: 18px;
+            margin-bottom: 7px;
+        }
+
+        .empty p {
+            color: #8a94a4;
+            font-size: 13px;
+        }
+
+        /* Responsive */
+
+        @media (max-width: 900px) {
+            .sidebar {
+                width: 210px;
+            }
+
+            .main {
+                margin-left: 210px;
+                width: calc(100% - 210px);
+                padding: 25px;
+            }
+        }
+
+        @media (max-width: 700px) {
+            .sidebar {
+                position: static;
+                width: 100%;
+                min-height: auto;
+            }
+
+            .layout {
+                display: block;
+            }
+
+            .main {
+                margin-left: 0;
+                width: 100%;
+                padding: 20px;
+            }
+
+            .admin-user,
+            .logout {
+                position: static;
+                margin-top: 20px;
+            }
+
+            .topbar {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 18px;
+            }
+
+            .summary-card {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="layout">
+
+    <!-- =========================
+         Sidebar
+    ========================== -->
+    <aside class="sidebar">
+
+        <div class="logo">🐾 PetCare AI</div>
+        <div class="admin-label">ADMIN PANEL</div>
+
+        <nav class="menu">
+
+            <a href="/admin">
+                <span class="menu-icon">📊</span>
+                Dashboard
+            </a>
+
+            <a href="/admin/users">
+                <span class="menu-icon">👥</span>
+                Users
+            </a>
+
+            <a href="/admin/pets">
+                <span class="menu-icon">🐶</span>
+                Pets
+            </a>
+
+            <a href="/admin/vaccinations" class="active">
+                <span class="menu-icon">💉</span>
+                Vaccinations
+            </a>
+
+            <a href="/admin/health-reports">
+    <span class="menu-icon">📋</span>
+    Health Reports
+</a>
+
+        </nav>
+
+        <div class="admin-user">
+            <div class="admin-user-title">Logged in as</div>
+            <div class="admin-user-name">Administrator</div>
+        </div>
+
+        <a href="/admin-logout" class="logout">
+            🚪 Logout
+        </a>
+
+    </aside>
+
+
+    <!-- =========================
+         Main Content
+    ========================== -->
+    <main class="main">
+
+        <div class="topbar">
+
+            <div>
+                <h1 class="page-title">Vaccinations 💉</h1>
+                <p class="page-subtitle">
+                    View and manage vaccination records of all users and pets.
+                </p>
+            </div>
+
+            <div class="summary-card">
+                <div class="summary-number">
+                    {{ vaccinations|length }}
+                </div>
+
+                <div class="summary-text">
+                    Total Vaccinations
+                </div>
+            </div>
+
+        </div>
+
+
+        <!-- =========================
+             Vaccination Table
+        ========================== -->
+
+        <div class="card">
+
+            <div class="card-header">
+                <h2>All Vaccination Records</h2>
+
+                <p>
+                    Complete vaccination information submitted by pet owners.
+                </p>
+            </div>
+
+
+            {% if vaccinations %}
+
+            <div class="table-wrap">
+
+                <table>
+
+                    <thead>
+                        <tr>
+                            <th>User</th>
+                            <th>Pet</th>
+                            <th>Vaccine Name</th>
+                            <th>Vaccination Date</th>
+                            <th>Next Due Date</th>
+                            <th>Status</th>
+                            <th>Notes</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                    {% for vaccination in vaccinations %}
+
+                        <tr>
+
+                            <!-- User -->
+                            <td>
+                                <div class="user-name">
+                                    {{ vaccination.user_name }}
+                                </div>
+
+                                <div class="user-email">
+                                    {{ vaccination.user_email }}
+                                </div>
+                            </td>
+
+
+                            <!-- Pet -->
+                            <td>
+
+                                <div class="pet-box">
+
+                                    <div class="pet-icon">
+
+                                        {% if vaccination.pet_type|lower == "dog" %}
+                                            🐶
+                                        {% elif vaccination.pet_type|lower == "cat" %}
+                                            🐱
+                                        {% elif vaccination.pet_type|lower == "bird" %}
+                                            🐦
+                                        {% elif vaccination.pet_type|lower == "rabbit" %}
+                                            🐰
+                                        {% else %}
+                                            🐾
+                                        {% endif %}
+
+                                    </div>
+
+                                    <div>
+                                        <div class="pet-name">
+                                            {{ vaccination.pet_name }}
+                                        </div>
+
+                                        <div class="pet-type">
+                                            {{ vaccination.pet_type }}
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                            </td>
+
+
+                            <!-- Vaccine -->
+                            <td>
+                                <div class="vaccine-name">
+                                    {{ vaccination.vaccine_name }}
+                                </div>
+                            </td>
+
+
+                            <!-- Vaccination Date -->
+                            <td>
+                                <div class="date-main">
+                                    {{ vaccination.vaccination_date }}
+                                </div>
+                            </td>
+
+
+                            <!-- Next Due Date -->
+                            <td>
+
+                                {% if vaccination.next_due_date %}
+
+                                    <div class="date-main">
+                                        {{ vaccination.next_due_date }}
+                                    </div>
+
+                                    <div class="date-due">
+                                        Next vaccination
+                                    </div>
+
+                                {% else %}
+
+                                    <div class="date-due">
+                                        Not provided
+                                    </div>
+
+                                {% endif %}
+
+                            </td>
+
+
+                            <!-- Status -->
+                            <td>
+
+                                {% if vaccination.next_due_date %}
+
+                                    <span
+                                        class="status"
+                                        data-due="{{ vaccination.next_due_date }}"
+                                    >
+                                        Checking...
+                                    </span>
+
+                                {% else %}
+
+                                    <span class="status not-set">
+                                        Not Set
+                                    </span>
+
+                                {% endif %}
+
+                            </td>
+
+
+                            <!-- Notes -->
+                            <td>
+
+                                <div class="notes">
+                                    {% if vaccination.notes %}
+                                        {{ vaccination.notes }}
+                                    {% else %}
+                                        No notes
+                                    {% endif %}
+                                </div>
+
+                            </td>
+
+                        </tr>
+
+                    {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+            {% else %}
+
+            <div class="empty">
+
+                <div class="empty-icon">💉</div>
+
+                <h3>No Vaccination Records</h3>
+
+                <p>
+                    No vaccination records have been added yet.
+                </p>
+
+            </div>
+
+            {% endif %}
+
+        </div>
+
+    </main>
+
+</div>
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+
+        const statusElements = document.querySelectorAll("[data-due]");
+
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+
+        statusElements.forEach(function (element) {
+
+            const dueDate = new Date(element.dataset.due + "T00:00:00");
+            dueDate.setHours(0, 0, 0, 0);
+
+            if (dueDate < today) {
+
+                element.textContent = "Completed";
+                element.classList.add("completed");
+
+            } else {
+
+                element.textContent = "Upcoming";
+                element.classList.add("upcoming");
+
+            }
+        });
+
+    });
+</script>
+
+</body>
+</html>

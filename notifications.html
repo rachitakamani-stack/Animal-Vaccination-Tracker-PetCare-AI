@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Notifications - PetCare AI</title>
+
+    <style>
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+            font-family:Arial, Helvetica, sans-serif;
+        }
+
+        body{
+            background:#f7fbff;
+            color:#17233c;
+        }
+
+        .layout{
+            display:flex;
+            min-height:100vh;
+        }
+
+        /* =========================
+           SIDEBAR
+        ========================= */
+
+        .sidebar{
+            width:235px;
+            background:#ffffff;
+            border-right:1px solid #edf0f5;
+            padding:25px 15px;
+            position:fixed;
+            left:0;
+            top:0;
+            bottom:0;
+            display:flex;
+            flex-direction:column;
+            z-index:20;
+        }
+
+        .logo{
+            display:flex;
+            align-items:center;
+            gap:8px;
+            font-size:20px;
+            font-weight:800;
+            padding:5px 12px 30px;
+        }
+
+        .logo-paw{
+            font-size:25px;
+        }
+
+        .logo span{
+            color:#16a36a;
+        }
+
+        .menu{
+            display:flex;
+            flex-direction:column;
+            gap:7px;
+        }
+
+        .menu a{
+            text-decoration:none;
+            color:#526078;
+            padding:12px 13px;
+            border-radius:11px;
+            font-size:13px;
+            font-weight:600;
+            display:flex;
+            align-items:center;
+            gap:12px;
+            transition:.2s;
+        }
+
+        .menu a:hover{
+            background:#eefaf5;
+            color:#129762;
+        }
+
+        .menu a.active{
+            background:#dff5eb;
+            color:#109460;
+        }
+
+        .menu-icon{
+            width:22px;
+            text-align:center;
+            font-size:17px;
+        }
+
+        .logout{
+            margin-top:auto;
+            text-decoration:none;
+            color:#f04472;
+            background:#fff0f4;
+            padding:12px;
+            border-radius:12px;
+            text-align:center;
+            font-weight:700;
+            font-size:13px;
+        }
+
+        /* =========================
+           MAIN
+        ========================= */
+
+        .main{
+            margin-left:235px;
+            width:calc(100% - 235px);
+            padding:30px 35px 50px;
+        }
+
+        /* =========================
+           HEADER
+        ========================= */
+
+        .page-header{
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            margin-bottom:25px;
+        }
+
+        .page-title h1{
+            font-size:28px;
+            margin-bottom:7px;
+        }
+
+        .page-title p{
+            color:#7d8798;
+            font-size:13px;
+        }
+
+        .header-icon{
+            width:46px;
+            height:46px;
+            border-radius:13px;
+            background:#dff5eb;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            font-size:22px;
+        }
+
+        /* =========================
+           SUMMARY CARDS
+        ========================= */
+
+        .summary-grid{
+            display:grid;
+            grid-template-columns:repeat(3,1fr);
+            gap:18px;
+            margin-bottom:22px;
+        }
+
+        .summary-card{
+            background:white;
+            border:1px solid #edf0f5;
+            border-radius:17px;
+            padding:18px 20px;
+            box-shadow:0 6px 22px rgba(30,45,75,.05);
+        }
+
+        .summary-card.green{
+            background:linear-gradient(
+                135deg,
+                #effbf6,
+                #f9fffc
+            );
+        }
+
+        .summary-card.pink{
+            background:linear-gradient(
+                135deg,
+                #fff1f5,
+                #fffafd
+            );
+        }
+
+        .summary-card.blue{
+            background:linear-gradient(
+                135deg,
+                #eef6ff,
+                #fbfdff
+            );
+        }
+
+        .summary-content{
+            display:flex;
+            align-items:center;
+            gap:13px;
+        }
+
+        .summary-icon{
+            width:45px;
+            height:45px;
+            border-radius:13px;
+            background:white;
+            display:flex;
+            justify-content:center;
+            align-items:center;
+            font-size:21px;
+            flex-shrink:0;
+        }
+
+        .summary-card h3{
+            font-size:14px;
+            margin-bottom:5px;
+        }
+
+        .summary-card p{
+            color:#7e8898;
+            font-size:10px;
+            line-height:1.5;
+        }
+
+        /* =========================
+           NOTIFICATION CARD
+        ========================= */
+
+        .notification-list{
+            display:flex;
+            flex-direction:column;
+            gap:15px;
+        }
+
+        .notification-card{
+            background:white;
+            border:1px solid #edf0f5;
+            border-radius:17px;
+            padding:18px 20px;
+            display:flex;
+            align-items:center;
+            gap:16px;
+            box-shadow:0 6px 22px rgba(30,45,75,.05);
+            transition:.2s;
+        }
+
+        .notification-card:hover{
+            transform:translateY(-2px);
+            box-shadow:0 10px 28px rgba(30,45,75,.08);
+        }
+
+        .notification-icon{
+            width:52px;
+            height:52px;
+            border-radius:14px;
+            background:#fff1d6;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            font-size:24px;
+            flex-shrink:0;
+        }
+
+        .notification-content{
+            flex:1;
+        }
+
+        .notification-top{
+            display:flex;
+            align-items:center;
+            gap:10px;
+            margin-bottom:6px;
+        }
+
+        .notification-top h2{
+            font-size:15px;
+            color:#26344c;
+        }
+
+        .badge{
+            display:inline-block;
+            background:#fff1d6;
+            color:#dc9b18;
+            padding:5px 8px;
+            border-radius:7px;
+            font-size:9px;
+            font-weight:bold;
+        }
+
+        .notification-content p{
+            color:#7d8798;
+            font-size:10px;
+            margin-top:4px;
+        }
+
+        .notification-date{
+            min-width:125px;
+            text-align:right;
+        }
+
+        .notification-date .label{
+            display:block;
+            color:#9aa3b1;
+            font-size:9px;
+            margin-bottom:5px;
+        }
+
+        .notification-date .date{
+            display:inline-block;
+            background:#e4f8ef;
+            color:#139560;
+            padding:7px 10px;
+            border-radius:8px;
+            font-size:10px;
+            font-weight:bold;
+        }
+
+        /* =========================
+           EMPTY
+        ========================= */
+
+        .empty{
+            background:white;
+            border:1px solid #edf0f5;
+            border-radius:18px;
+            padding:65px 20px;
+            text-align:center;
+            box-shadow:0 7px 25px rgba(30,45,75,.06);
+        }
+
+        .empty-icon{
+            width:70px;
+            height:70px;
+            margin:0 auto 15px;
+            border-radius:20px;
+            background:#eefaf5;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            font-size:32px;
+        }
+
+        .empty h2{
+            font-size:18px;
+            margin-bottom:8px;
+        }
+
+        .empty p{
+            color:#8791a2;
+            font-size:11px;
+        }
+
+        /* =========================
+           INFO NOTE
+        ========================= */
+
+        .note{
+            margin-top:18px;
+            background:#fff9ea;
+            border-radius:12px;
+            padding:13px 16px;
+            color:#756747;
+            font-size:9px;
+            line-height:1.6;
+            border:1px solid #f6e8bf;
+        }
+
+        /* =========================
+           RESPONSIVE
+        ========================= */
+
+        @media(max-width:1050px){
+
+            .sidebar{
+                width:205px;
+            }
+
+            .main{
+                margin-left:205px;
+                width:calc(100% - 205px);
+                padding:25px;
+            }
+
+            .summary-grid{
+                grid-template-columns:1fr 1fr;
+            }
+        }
+
+        @media(max-width:750px){
+
+            .layout{
+                flex-direction:column;
+            }
+
+            .sidebar{
+                position:relative;
+                width:100%;
+                height:auto;
+            }
+
+            .main{
+                margin-left:0;
+                width:100%;
+                padding:20px;
+            }
+
+            .menu{
+                display:grid;
+                grid-template-columns:1fr 1fr;
+            }
+
+            .logout{
+                margin-top:15px;
+            }
+
+            .summary-grid{
+                grid-template-columns:1fr;
+            }
+
+            .page-header{
+                align-items:flex-start;
+            }
+
+            .notification-card{
+                align-items:flex-start;
+            }
+
+            .notification-date{
+                min-width:auto;
+                text-align:left;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="layout">
+
+    <!-- =========================
+         SIDEBAR
+    ========================= -->
+
+    <aside class="sidebar">
+
+        <div class="logo">
+
+            <div class="logo-paw">
+                🐾
+            </div>
+
+            <div>
+                PetCare <span>AI</span>
+            </div>
+
+        </div>
+
+        <nav class="menu">
+
+            <a href="/dashboard">
+                <span class="menu-icon">⌂</span>
+                Dashboard
+            </a>
+
+            <a href="/pets">
+                <span class="menu-icon">🐾</span>
+                My Pets
+            </a>
+
+            <a href="/vaccination">
+                <span class="menu-icon">💉</span>
+                Vaccination
+            </a>
+
+            <a href="/health-records">
+                <span class="menu-icon">📋</span>
+                Health Records
+            </a>
+
+            <a href="/ai-health">
+                <span class="menu-icon">🤖</span>
+                AI Health Checker
+            </a>
+
+            <a href="/nearby-vet">
+                <span class="menu-icon">📍</span>
+                Nearby Veterinarians
+            </a>
+
+            <a href="/notifications" class="active">
+                <span class="menu-icon">🔔</span>
+                Notifications
+            </a>
+
+            <a href="/profile">
+                <span class="menu-icon">👤</span>
+                Profile
+            </a>
+
+        </nav>
+
+        <a href="/logout" class="logout">
+            ⇥ &nbsp; Logout
+        </a>
+
+    </aside>
+
+
+    <!-- =========================
+         MAIN
+    ========================= -->
+
+    <main class="main">
+
+        <!-- HEADER -->
+
+        <div class="page-header">
+
+            <div class="page-title">
+
+                <h1>
+                    🔔 Notifications
+                </h1>
+
+                <p>
+                    Stay updated about your pet's upcoming vaccinations.
+                </p>
+
+            </div>
+
+            <div class="header-icon">
+                🔔
+            </div>
+
+        </div>
+
+
+        <!-- =========================
+             SUMMARY
+        ========================= -->
+
+        <div class="summary-grid">
+
+            <div class="summary-card green">
+
+                <div class="summary-content">
+
+                    <div class="summary-icon">
+                        🐾
+                    </div>
+
+                    <div>
+
+                        <h3>
+                            Pet Care Alerts
+                        </h3>
+
+                        <p>
+                            Important vaccination updates for your pets.
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="summary-card pink">
+
+                <div class="summary-content">
+
+                    <div class="summary-icon">
+                        📅
+                    </div>
+
+                    <div>
+
+                        <h3>
+                            Upcoming Due Dates
+                        </h3>
+
+                        <p>
+                            Keep track of your next vaccination dates.
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="summary-card blue">
+
+                <div class="summary-content">
+
+                    <div class="summary-icon">
+                        💌
+                    </div>
+
+                    <div>
+
+                        <h3>
+                            Email Reminder
+                        </h3>
+
+                        <p>
+                            Reminder emails are sent before due dates.
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- =========================
+             NOTIFICATIONS
+        ========================= -->
+
+        {% if notifications %}
+
+            <div class="notification-list">
+
+                {% for item in notifications %}
+
+                    <div class="notification-card">
+
+                        <div class="notification-icon">
+                            💉
+                        </div>
+
+
+                        <div class="notification-content">
+
+                            <div class="notification-top">
+
+                                <h2>
+                                    {{ item.pet_name }}
+                                    — 
+                                    {{ item.vaccine_name }}
+                                </h2>
+
+                                <span class="badge">
+                                    Upcoming
+                                </span>
+
+                            </div>
+
+
+                            <p>
+                                <strong>Pet Type:</strong>
+                                {{ item.pet_type }}
+                            </p>
+
+
+                            <p>
+                                Vaccination is scheduled for
+                                the date shown on the right.
+                            </p>
+
+                        </div>
+
+
+                        <div class="notification-date">
+
+                            <span class="label">
+                                Next Due Date
+                            </span>
+
+                            <span class="date">
+                                {{ item.next_due_date }}
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                {% endfor %}
+
+            </div>
+
+        {% else %}
+
+            <!-- EMPTY -->
+
+            <div class="empty">
+
+                <div class="empty-icon">
+                    📭
+                </div>
+
+                <h2>
+                    No Upcoming Vaccinations
+                </h2>
+
+                <p>
+                    You currently have no upcoming vaccination reminders.
+                </p>
+
+            </div>
+
+        {% endif %}
+
+
+        <!-- =========================
+             NOTE
+        ========================= -->
+
+        <div class="note">
+
+            <strong>Important:</strong>
+
+            Vaccination reminders are based on the next due dates
+            saved in your vaccination records. Please confirm the
+            appropriate vaccination schedule with a qualified veterinarian.
+
+        </div>
+
+    </main>
+
+</div>
+
+</body>
+</html>

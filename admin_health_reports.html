@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Health Reports | PetCare AI</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #f7faf8;
+            color: #26344c;
+        }
+
+        .layout {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* =========================
+           SIDEBAR
+        ========================= */
+
+        .sidebar {
+            width: 240px;
+            background: #ffffff;
+            border-right: 1px solid #edf0f5;
+            min-height: 100vh;
+            padding: 25px 16px;
+            position: fixed;
+            left: 0;
+            top: 0;
+            bottom: 0;
+        }
+
+        .logo {
+            font-size: 22px;
+            font-weight: bold;
+            color: #26344c;
+            margin-bottom: 8px;
+            padding-left: 10px;
+        }
+
+        .admin-label {
+            color: #8a94a4;
+            font-size: 12px;
+            padding-left: 10px;
+            margin-bottom: 25px;
+        }
+
+        .menu {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .menu a {
+            text-decoration: none;
+            color: #526078;
+            padding: 12px 14px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            gap: 11px;
+            font-size: 14px;
+            transition: 0.2s;
+        }
+
+        .menu a:hover {
+            background: #eefaf5;
+            color: #129762;
+        }
+
+        .menu a.active {
+            background: #dff5eb;
+            color: #109460;
+            font-weight: bold;
+        }
+
+        .menu-icon {
+            width: 22px;
+            text-align: center;
+        }
+
+        .admin-user {
+            position: absolute;
+            left: 16px;
+            right: 16px;
+            bottom: 75px;
+            background: #f1f6f3;
+            border: 1px solid #e4eee9;
+            border-radius: 14px;
+            padding: 13px;
+        }
+
+        .admin-user-title {
+            color: #8490a1;
+            font-size: 11px;
+            margin-bottom: 4px;
+        }
+
+        .admin-user-name {
+            color: #26344c;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .logout {
+            position: absolute;
+            left: 16px;
+            right: 16px;
+            bottom: 20px;
+            text-decoration: none;
+            color: #e84d78;
+            background: #fff0f4;
+            padding: 11px 14px;
+            border-radius: 12px;
+            text-align: center;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        /* =========================
+           MAIN
+        ========================= */
+
+        .main {
+            margin-left: 240px;
+            width: calc(100% - 240px);
+            padding: 35px;
+        }
+
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 28px;
+        }
+
+        .page-title {
+            font-size: 30px;
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+
+        .page-subtitle {
+            color: #8290a2;
+            font-size: 14px;
+        }
+
+        .summary-card {
+            background: #ffffff;
+            border: 1px solid #edf1ef;
+            border-radius: 18px;
+            padding: 18px 25px;
+            min-width: 180px;
+            text-align: center;
+            box-shadow: 0 8px 25px rgba(35, 55, 70, 0.05);
+        }
+
+        .summary-number {
+            font-size: 27px;
+            font-weight: bold;
+            color: #129762;
+        }
+
+        .summary-text {
+            margin-top: 5px;
+            color: #8490a1;
+            font-size: 13px;
+        }
+
+        /* =========================
+           TABLE CARD
+        ========================= */
+
+        .card {
+            background: #ffffff;
+            border-radius: 20px;
+            border: 1px solid #edf1ef;
+            box-shadow: 0 10px 30px rgba(35, 55, 70, 0.06);
+            overflow: hidden;
+        }
+
+        .card-header {
+            padding: 22px 24px;
+            border-bottom: 1px solid #edf1ef;
+        }
+
+        .card-header h2 {
+            font-size: 18px;
+            margin-bottom: 5px;
+        }
+
+        .card-header p {
+            color: #8a94a4;
+            font-size: 13px;
+        }
+
+        .table-wrap {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 1100px;
+        }
+
+        th {
+            text-align: left;
+            background: #f8fbfa;
+            color: #68768a;
+            font-size: 12px;
+            padding: 15px 18px;
+            white-space: nowrap;
+        }
+
+        td {
+            padding: 16px 18px;
+            border-top: 1px solid #f0f2f4;
+            font-size: 13px;
+            color: #43516a;
+            vertical-align: middle;
+        }
+
+        tr:hover td {
+            background: #fcfefd;
+        }
+
+        /* =========================
+           USER
+        ========================= */
+
+        .user-name {
+            font-weight: bold;
+            color: #26344c;
+            margin-bottom: 4px;
+        }
+
+        .user-email {
+            font-size: 11px;
+            color: #98a2b1;
+        }
+
+        /* =========================
+           PET
+        ========================= */
+
+        .pet-box {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .pet-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            background: #effaf5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        .pet-name {
+            font-weight: bold;
+            color: #26344c;
+        }
+
+        .pet-type {
+            color: #98a2b1;
+            font-size: 11px;
+            margin-top: 3px;
+        }
+
+        /* =========================
+           RECORD TYPE
+        ========================= */
+
+        .record-type {
+            display: inline-block;
+            padding: 7px 11px;
+            border-radius: 20px;
+            background: #eef7ff;
+            color: #4d7aa7;
+            font-size: 11px;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+
+        /* =========================
+           DATE
+        ========================= */
+
+        .date-main {
+            color: #526078;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        /* =========================
+           DETAILS
+        ========================= */
+
+        .details {
+            max-width: 260px;
+            line-height: 1.5;
+            color: #718096;
+        }
+
+        /* =========================
+           REPORT BUTTON
+        ========================= */
+
+        .report-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            text-decoration: none;
+            background: #e7f8ef;
+            color: #129762;
+            padding: 8px 13px;
+            border-radius: 9px;
+            font-size: 12px;
+            font-weight: bold;
+            white-space: nowrap;
+            transition: 0.2s;
+        }
+
+        .report-btn:hover {
+            background: #d6f2e4;
+            transform: translateY(-1px);
+        }
+
+        .no-report {
+            color: #9aa3af;
+            font-size: 12px;
+        }
+
+        /* =========================
+           DELETE / VIEW
+        ========================= */
+
+        .action-buttons {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .view-btn {
+            width: 34px;
+            height: 34px;
+            border: none;
+            border-radius: 9px;
+            background: #eef7ff;
+            color: #4d7aa7;
+            cursor: pointer;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+        }
+
+        /* =========================
+           EMPTY
+        ========================= */
+
+        .empty {
+            text-align: center;
+            padding: 65px 20px;
+        }
+
+        .empty-icon {
+            font-size: 45px;
+            margin-bottom: 12px;
+        }
+
+        .empty h3 {
+            font-size: 18px;
+            margin-bottom: 7px;
+        }
+
+        .empty p {
+            color: #8a94a4;
+            font-size: 13px;
+        }
+
+        /* =========================
+           RESPONSIVE
+        ========================= */
+
+        @media (max-width: 900px) {
+
+            .sidebar {
+                width: 210px;
+            }
+
+            .main {
+                margin-left: 210px;
+                width: calc(100% - 210px);
+                padding: 25px;
+            }
+        }
+
+        @media (max-width: 700px) {
+
+            .layout {
+                display: block;
+            }
+
+            .sidebar {
+                position: static;
+                width: 100%;
+                min-height: auto;
+            }
+
+            .main {
+                margin-left: 0;
+                width: 100%;
+                padding: 20px;
+            }
+
+            .admin-user,
+            .logout {
+                position: static;
+                margin-top: 20px;
+            }
+
+            .topbar {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 18px;
+            }
+
+            .summary-card {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="layout">
+
+    <!-- =========================
+         SIDEBAR
+    ========================== -->
+
+    <aside class="sidebar">
+
+        <div class="logo">🐾 PetCare AI</div>
+
+        <div class="admin-label">
+            ADMIN PANEL
+        </div>
+
+        <nav class="menu">
+
+            <a href="/admin">
+                <span class="menu-icon">📊</span>
+                Dashboard
+            </a>
+
+            <a href="/admin/users">
+                <span class="menu-icon">👥</span>
+                Users
+            </a>
+
+            <a href="/admin/pets">
+                <span class="menu-icon">🐶</span>
+                Pets
+            </a>
+
+            <a href="/admin/vaccinations">
+                <span class="menu-icon">💉</span>
+                Vaccinations
+            </a>
+
+            <a href="/admin/health-reports" class="active">
+                <span class="menu-icon">📋</span>
+                Health Reports
+            </a>
+
+        </nav>
+
+
+        <div class="admin-user">
+
+            <div class="admin-user-title">
+                Logged in as
+            </div>
+
+            <div class="admin-user-name">
+                Administrator
+            </div>
+
+        </div>
+
+
+        <a href="/admin-logout" class="logout">
+            🚪 Logout
+        </a>
+
+    </aside>
+
+
+    <!-- =========================
+         MAIN CONTENT
+    ========================== -->
+
+    <main class="main">
+
+        <div class="topbar">
+
+            <div>
+
+                <h1 class="page-title">
+                    Health Reports 📋
+                </h1>
+
+                <p class="page-subtitle">
+                    View health records and uploaded reports submitted by pet owners.
+                </p>
+
+            </div>
+
+
+            <div class="summary-card">
+
+                <div class="summary-number">
+                    {{ health_reports|length }}
+                </div>
+
+                <div class="summary-text">
+                    Total Health Records
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- =========================
+             REPORT TABLE
+        ========================== -->
+
+        <div class="card">
+
+            <div class="card-header">
+
+                <h2>
+                    All Health Reports
+                </h2>
+
+                <p>
+                    Complete health record information from all registered users.
+                </p>
+
+            </div>
+
+
+            {% if health_reports %}
+
+            <div class="table-wrap">
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+                            <th>User</th>
+                            <th>Pet</th>
+                            <th>Record Date</th>
+                            <th>Record Type</th>
+                            <th>Details</th>
+                            <th>Report</th>
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+                    {% for report in health_reports %}
+
+                        <tr>
+
+                            <!-- USER -->
+
+                            <td>
+
+                                <div class="user-name">
+                                    {{ report.user_name }}
+                                </div>
+
+                                <div class="user-email">
+                                    {{ report.user_email }}
+                                </div>
+
+                            </td>
+
+
+                            <!-- PET -->
+
+                            <td>
+
+                                <div class="pet-box">
+
+                                    <div class="pet-icon">
+
+                                        {% if report.pet_type|lower == "dog" %}
+                                            🐶
+
+                                        {% elif report.pet_type|lower == "cat" %}
+                                            🐱
+
+                                        {% elif report.pet_type|lower == "bird" %}
+                                            🐦
+
+                                        {% elif report.pet_type|lower == "rabbit" %}
+                                            🐰
+
+                                        {% else %}
+                                            🐾
+                                        {% endif %}
+
+                                    </div>
+
+
+                                    <div>
+
+                                        <div class="pet-name">
+                                            {{ report.pet_name }}
+                                        </div>
+
+                                        <div class="pet-type">
+                                            {{ report.pet_type }}
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                            </td>
+
+
+                            <!-- RECORD DATE -->
+
+                            <td>
+
+                                <div class="date-main">
+                                    {{ report.record_date }}
+                                </div>
+
+                            </td>
+
+
+                            <!-- RECORD TYPE -->
+
+                            <td>
+
+                                <span class="record-type">
+                                    {{ report.record_type }}
+                                </span>
+
+                            </td>
+
+
+                            <!-- DETAILS -->
+
+                            <td>
+
+                                <div class="details">
+
+                                    {% if report.details %}
+                                        {{ report.details }}
+                                    {% else %}
+                                        No details available
+                                    {% endif %}
+
+                                </div>
+
+                            </td>
+
+
+                            <!-- REPORT -->
+
+                            <td>
+
+                                {% if report.report_file %}
+
+                                    <a
+                                        href="{{ url_for('static', filename='uploads/' + report.report_file) }}"
+                                        target="_blank"
+                                        class="report-btn"
+                                    >
+                                        📄 View Report
+                                    </a>
+
+                                {% else %}
+
+                                    <span class="no-report">
+                                        No Report
+                                    </span>
+
+                                {% endif %}
+
+                            </td>
+
+                        </tr>
+
+                    {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+            {% else %}
+
+            <div class="empty">
+
+                <div class="empty-icon">
+                    📋
+                </div>
+
+                <h3>
+                    No Health Records
+                </h3>
+
+                <p>
+                    No health records have been added by users yet.
+                </p>
+
+            </div>
+
+            {% endif %}
+
+        </div>
+
+    </main>
+
+</div>
+
+</body>
+</html>

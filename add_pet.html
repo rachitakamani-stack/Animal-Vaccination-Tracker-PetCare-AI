@@ -1,0 +1,1079 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>PetCare AI - Add Pet</title>
+
+    <style>
+
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+            font-family:Arial, Helvetica, sans-serif;
+        }
+
+        body{
+            background:#f7fbff;
+            color:#17233c;
+        }
+
+        /* =========================
+           LAYOUT
+        ========================= */
+
+        .layout{
+            display:flex;
+            min-height:100vh;
+        }
+
+        /* =========================
+           SIDEBAR
+        ========================= */
+
+        .sidebar{
+            width:235px;
+            background:#ffffff;
+            border-right:1px solid #edf0f5;
+            padding:25px 15px;
+            position:fixed;
+            left:0;
+            top:0;
+            bottom:0;
+            display:flex;
+            flex-direction:column;
+            z-index:10;
+        }
+
+        .logo{
+            display:flex;
+            align-items:center;
+            gap:8px;
+            font-size:20px;
+            font-weight:800;
+            padding:5px 12px 30px;
+        }
+
+        .logo-paw{
+            font-size:25px;
+        }
+
+        .logo span{
+            color:#16a36a;
+        }
+
+        .menu{
+            display:flex;
+            flex-direction:column;
+            gap:7px;
+        }
+
+        .menu a{
+            text-decoration:none;
+            color:#526078;
+            padding:12px 13px;
+            border-radius:11px;
+            font-size:13px;
+            font-weight:600;
+            display:flex;
+            align-items:center;
+            gap:12px;
+            transition:.2s;
+        }
+
+        .menu a:hover{
+            background:#eefaf5;
+            color:#129762;
+        }
+
+        .menu a.active{
+            background:#dff5eb;
+            color:#109460;
+        }
+
+        .menu-icon{
+            width:22px;
+            text-align:center;
+            font-size:17px;
+        }
+
+        .logout{
+            margin-top:auto;
+            text-decoration:none;
+            color:#f04472;
+            background:#fff0f4;
+            padding:12px;
+            border-radius:12px;
+            text-align:center;
+            font-weight:700;
+            font-size:13px;
+        }
+
+        /* =========================
+           MAIN
+        ========================= */
+
+        .main{
+            margin-left:235px;
+            width:calc(100% - 235px);
+            padding:30px 35px 50px;
+        }
+
+        /* =========================
+           PAGE HEADER
+        ========================= */
+
+        .page-header{
+            margin-bottom:24px;
+        }
+
+        .page-header h1{
+            font-size:28px;
+            margin-bottom:7px;
+        }
+
+        .page-header p{
+            color:#7c8799;
+            font-size:13px;
+        }
+
+        /* =========================
+           FORM CARD
+        ========================= */
+
+        .form-card{
+            background:white;
+            border-radius:22px;
+            padding:28px;
+            box-shadow:0 8px 30px rgba(30,45,75,.07);
+            border:1px solid #edf0f5;
+
+            display:grid;
+            grid-template-columns:330px 1fr;
+            gap:35px;
+        }
+
+        /* =========================
+           PHOTO SECTION
+        ========================= */
+
+        .photo-section{
+            display:flex;
+            flex-direction:column;
+            align-items:center;
+        }
+
+        .photo-title{
+            align-self:flex-start;
+            font-size:14px;
+            font-weight:700;
+            margin-bottom:12px;
+        }
+
+        .photo-box{
+            width:100%;
+            height:350px;
+            border:2px dashed #cfe5db;
+            border-radius:18px;
+            background:linear-gradient(
+                135deg,
+                #f2fbf7,
+                #f5f2ff
+            );
+
+            display:flex;
+            flex-direction:column;
+            align-items:center;
+            justify-content:center;
+
+            text-align:center;
+            position:relative;
+            overflow:hidden;
+        }
+
+        .photo-preview{
+            width:100%;
+            height:100%;
+            object-fit:cover;
+            display:none;
+        }
+
+        .photo-placeholder{
+            display:flex;
+            flex-direction:column;
+            align-items:center;
+            justify-content:center;
+            padding:20px;
+        }
+
+        .camera{
+            width:72px;
+            height:72px;
+            border-radius:50%;
+            background:#ffffff;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            font-size:31px;
+            margin-bottom:15px;
+            box-shadow:0 7px 20px rgba(30,45,75,.08);
+        }
+
+        .photo-placeholder h3{
+            font-size:15px;
+            margin-bottom:8px;
+        }
+
+        .photo-placeholder p{
+            color:#8791a1;
+            font-size:11px;
+            line-height:1.6;
+            max-width:220px;
+            margin-bottom:16px;
+        }
+
+        .choose-btn{
+            display:inline-block;
+            background:#e7f8f0;
+            color:#149460;
+            padding:10px 17px;
+            border-radius:9px;
+            font-size:11px;
+            font-weight:bold;
+            cursor:pointer;
+        }
+
+        #photoInput{
+            display:none;
+        }
+
+        .photo-note{
+            margin-top:10px;
+            color:#9098a8;
+            font-size:10px;
+        }
+
+        /* =========================
+           FORM
+        ========================= */
+
+        .form-section{
+            display:flex;
+            flex-direction:column;
+        }
+
+        .form-section h2{
+            font-size:18px;
+            margin-bottom:5px;
+        }
+
+        .form-section > p{
+            color:#8992a2;
+            font-size:11px;
+            margin-bottom:22px;
+        }
+
+        .form-grid{
+            display:grid;
+            grid-template-columns:1fr 1fr;
+            gap:16px;
+        }
+
+        .input-group{
+            display:flex;
+            flex-direction:column;
+        }
+
+        .input-group.full{
+            grid-column:1 / -1;
+        }
+
+        label{
+            font-size:11px;
+            font-weight:700;
+            margin-bottom:7px;
+            color:#334057;
+        }
+
+        input,
+        select{
+            height:43px;
+            border:1px solid #e2e7ee;
+            border-radius:10px;
+            padding:0 13px;
+            outline:none;
+            background:#ffffff;
+            color:#334057;
+            font-size:12px;
+            transition:.2s;
+        }
+
+        input::placeholder{
+            color:#abb2bf;
+        }
+
+        input:focus,
+        select:focus{
+            border-color:#23a96e;
+            box-shadow:0 0 0 3px rgba(35,169,110,.08);
+        }
+
+        .help{
+            margin-top:5px;
+            color:#98a0af;
+            font-size:9px;
+        }
+
+        /* =========================
+           PET TYPE QUICK PREVIEW
+        ========================= */
+
+        .type-preview{
+            margin-top:20px;
+            padding:13px;
+            background:#f8fafc;
+            border-radius:12px;
+            display:flex;
+            align-items:center;
+            gap:12px;
+        }
+
+        .type-image{
+            width:55px;
+            height:55px;
+            border-radius:11px;
+            overflow:hidden;
+            background:#eefaf6;
+            flex-shrink:0;
+        }
+
+        .type-image img{
+            width:100%;
+            height:100%;
+            object-fit:cover;
+        }
+
+        .type-preview h4{
+            font-size:11px;
+            margin-bottom:4px;
+        }
+
+        .type-preview p{
+            font-size:10px;
+            color:#8892a3;
+        }
+
+        /* =========================
+           BUTTONS
+        ========================= */
+
+        .form-buttons{
+            display:flex;
+            gap:12px;
+            margin-top:25px;
+        }
+
+        .save-btn,
+        .cancel-btn{
+            border:none;
+            padding:12px 22px;
+            border-radius:10px;
+            font-size:12px;
+            font-weight:bold;
+            cursor:pointer;
+            text-decoration:none;
+            text-align:center;
+        }
+
+        .save-btn{
+            background:#19a66a;
+            color:white;
+            box-shadow:0 7px 18px rgba(25,166,106,.18);
+            flex:1;
+        }
+
+        .save-btn:hover{
+            background:#128d59;
+        }
+
+        .cancel-btn{
+            background:#f4f6f9;
+            color:#637086;
+            min-width:100px;
+        }
+
+        .cancel-btn:hover{
+            background:#e9edf2;
+        }
+
+        /* =========================
+           DECORATIONS
+        ========================= */
+
+        .paw-one{
+            position:fixed;
+            right:45px;
+            top:120px;
+            font-size:45px;
+            opacity:.08;
+        }
+
+        .paw-two{
+            position:fixed;
+            right:80px;
+            bottom:70px;
+            font-size:50px;
+            opacity:.07;
+        }
+
+        /* =========================
+           RESPONSIVE
+        ========================= */
+
+        @media(max-width:1000px){
+
+            .sidebar{
+                width:205px;
+            }
+
+            .main{
+                margin-left:205px;
+                width:calc(100% - 205px);
+                padding:25px;
+            }
+
+            .form-card{
+                grid-template-columns:1fr;
+            }
+
+            .photo-box{
+                max-width:420px;
+                height:300px;
+            }
+        }
+
+        @media(max-width:750px){
+
+            .layout{
+                flex-direction:column;
+            }
+
+            .sidebar{
+                position:relative;
+                width:100%;
+                height:auto;
+            }
+
+            .main{
+                margin-left:0;
+                width:100%;
+            }
+
+            .menu{
+                display:grid;
+                grid-template-columns:1fr 1fr;
+            }
+
+            .logout{
+                margin-top:15px;
+            }
+
+            .form-grid{
+                grid-template-columns:1fr;
+            }
+
+            .input-group.full{
+                grid-column:auto;
+            }
+
+            .form-card{
+                padding:20px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<div class="layout">
+
+    <!-- =========================
+         SIDEBAR
+    ========================= -->
+
+    <aside class="sidebar">
+
+        <div class="logo">
+
+            <div class="logo-paw">🐾</div>
+
+            <div>
+                PetCare <span>AI</span>
+            </div>
+
+        </div>
+
+
+        <nav class="menu">
+
+            <a href="/dashboard">
+
+                <span class="menu-icon">⌂</span>
+
+                Dashboard
+
+            </a>
+
+
+            <a href="/pets">
+
+                <span class="menu-icon">🐾</span>
+
+                My Pets
+
+            </a>
+
+
+            <a href="/vaccination">
+
+                <span class="menu-icon">💉</span>
+
+                Vaccination
+
+            </a>
+
+
+            <a href="/health-records">
+
+                <span class="menu-icon">📋</span>
+
+                Health Records
+
+            </a>
+
+
+            <a href="/ai-health">
+
+                <span class="menu-icon">🤖</span>
+
+                AI Health Checker
+
+            </a>
+
+
+            <a href="/nearby-vet">
+
+                <span class="menu-icon">📍</span>
+
+                Nearby Veterinarians
+
+            </a>
+
+
+            <a href="/notifications">
+
+                <span class="menu-icon">🔔</span>
+
+                Notifications
+
+            </a>
+
+
+            <a href="/profile">
+
+                <span class="menu-icon">👤</span>
+
+                Profile
+
+            </a>
+
+        </nav>
+
+
+        <a href="/logout" class="logout">
+
+            ⇥ &nbsp; Logout
+
+        </a>
+
+    </aside>
+
+
+    <!-- =========================
+         MAIN
+    ========================= -->
+
+    <main class="main">
+
+        <div class="page-header">
+
+            <h1>
+                Add New Pet
+            </h1>
+
+            <p>
+                Fill in your pet's details and start tracking their care.
+            </p>
+
+        </div>
+
+
+        <form
+            class="form-card"
+            method="POST"
+            action="/add-pet"
+        >
+
+            <!-- =========================
+                 PHOTO
+            ========================= -->
+
+            <div class="photo-section">
+
+                <div class="photo-title">
+                    Pet Photo
+                </div>
+
+
+                <div class="photo-box">
+
+                    <img
+                        id="photoPreview"
+                        class="photo-preview"
+                        src=""
+                        alt="Pet Preview"
+                    >
+
+
+                    <div
+                        class="photo-placeholder"
+                        id="photoPlaceholder"
+                    >
+
+                        <div class="camera">
+                            📷
+                        </div>
+
+                        <h3>
+                            Upload Pet Photo
+                        </h3>
+
+                        <p>
+                            Add a photo of your pet to make
+                            their profile more personal.
+                        </p>
+
+                        <label
+                            for="photoInput"
+                            class="choose-btn"
+                        >
+                            Choose Photo
+                        </label>
+
+                    </div>
+
+                </div>
+
+
+                <input
+                    type="file"
+                    id="photoInput"
+                    accept=".jpg,.jpeg,.png"
+                >
+
+
+                <div class="photo-note">
+                    JPG or PNG • Preview only
+                </div>
+
+            </div>
+
+
+            <!-- =========================
+                 FORM
+            ========================= -->
+
+            <div class="form-section">
+
+                <h2>
+                    Pet Information
+                </h2>
+
+                <p>
+                    Enter the basic information about your pet.
+                </p>
+
+
+                <div class="form-grid">
+
+                    <!-- PET NAME -->
+
+                    <div class="input-group">
+
+                        <label for="pet_name">
+                            Pet Name
+                        </label>
+
+                        <input
+                            type="text"
+                            id="pet_name"
+                            name="pet_name"
+                            placeholder="Enter pet name"
+                            required
+                        >
+
+                    </div>
+
+
+                    <!-- PET TYPE -->
+
+                    <div class="input-group">
+
+                        <label for="pet_type">
+                            Pet Type
+                        </label>
+
+                        <select
+                            id="pet_type"
+                            name="pet_type"
+                            required
+                        >
+
+                            <option value="">
+                                Select Type
+                            </option>
+
+                            <option value="Dog">
+                                Dog
+                            </option>
+
+                            <option value="Cat">
+                                Cat
+                            </option>
+
+                            <option value="Bird">
+                                Bird
+                            </option>
+
+                            <option value="Rabbit">
+                                Rabbit
+                            </option>
+
+                            <option value="Other">
+                                Other
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <!-- BREED -->
+
+                    <div class="input-group full">
+
+                        <label for="breed">
+                            Breed
+                        </label>
+
+                        <input
+                            type="text"
+                            id="breed"
+                            name="breed"
+                            placeholder="Enter breed"
+                        >
+
+                    </div>
+
+
+                    <!-- AGE -->
+
+                    <div class="input-group">
+
+                        <label for="age">
+                            Age (Years)
+                        </label>
+
+                        <input
+                            type="number"
+                            id="age"
+                            name="age"
+                            min="0"
+                            placeholder="0"
+                        >
+
+                        <span class="help">
+                            Enter age in completed years.
+                        </span>
+
+                    </div>
+
+
+                    <!-- WEIGHT -->
+
+                    <div class="input-group">
+
+                        <label for="weight">
+                            Weight (kg)
+                        </label>
+
+                        <input
+                            type="number"
+                            id="weight"
+                            name="weight"
+                            min="0"
+                            step="0.1"
+                            placeholder="0.0"
+                        >
+
+                        <span class="help">
+                            Enter approximate weight.
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <!-- TYPE PREVIEW -->
+
+                <div
+                    class="type-preview"
+                    id="typePreview"
+                    style="display:none;"
+                >
+
+                    <div class="type-image">
+
+                        <img
+                            id="typeImage"
+                            src=""
+                            alt="Selected pet type"
+                        >
+
+                    </div>
+
+                    <div>
+
+                        <h4 id="typeTitle">
+                            Selected Pet
+                        </h4>
+
+                        <p id="typeText">
+                            Your pet photo style will be shown here.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <!-- BUTTONS -->
+
+                <div class="form-buttons">
+
+                    <button
+                        type="submit"
+                        class="save-btn"
+                    >
+                        🐾 Save Pet
+                    </button>
+
+
+                    <a
+                        href="/pets"
+                        class="cancel-btn"
+                    >
+                        Cancel
+                    </a>
+
+                </div>
+
+            </div>
+
+        </form>
+
+    </main>
+
+</div>
+
+
+<!-- DECORATIONS -->
+
+<div class="paw-one">🐾</div>
+
+<div class="paw-two">🐾</div>
+
+
+<script>
+
+    /* =========================
+       PHOTO PREVIEW
+    ========================= */
+
+    const photoInput =
+        document.getElementById("photoInput");
+
+    const photoPreview =
+        document.getElementById("photoPreview");
+
+    const photoPlaceholder =
+        document.getElementById("photoPlaceholder");
+
+
+    photoInput.addEventListener("change", function(){
+
+        const file = this.files[0];
+
+        if(file){
+
+            const reader = new FileReader();
+
+            reader.onload = function(event){
+
+                photoPreview.src =
+                    event.target.result;
+
+                photoPreview.style.display =
+                    "block";
+
+                photoPlaceholder.style.display =
+                    "none";
+
+            };
+
+            reader.readAsDataURL(file);
+
+        }
+
+    });
+
+
+    /* =========================
+       PET TYPE PREVIEW
+    ========================= */
+
+    const petType =
+        document.getElementById("pet_type");
+
+    const typePreview =
+        document.getElementById("typePreview");
+
+    const typeImage =
+        document.getElementById("typeImage");
+
+    const typeTitle =
+        document.getElementById("typeTitle");
+
+    const typeText =
+        document.getElementById("typeText");
+
+
+    petType.addEventListener("change", function(){
+
+        const type =
+            this.value.toLowerCase();
+
+
+        if(type === "dog"){
+
+            typeImage.src =
+                "{{ url_for('static', filename='pet_dog.png') }}";
+
+            typeTitle.textContent =
+                "Dog";
+
+            typeText.textContent =
+                "Dog profile selected.";
+
+            typePreview.style.display =
+                "flex";
+
+        }
+
+        else if(type === "cat"){
+
+            typeImage.src =
+                "{{ url_for('static', filename='pet_cat.png') }}";
+
+            typeTitle.textContent =
+                "Cat";
+
+            typeText.textContent =
+                "Cat profile selected.";
+
+            typePreview.style.display =
+                "flex";
+
+        }
+
+        else if(type === "bird"){
+
+            typeImage.src =
+                "{{ url_for('static', filename='pet_bird.png') }}";
+
+            typeTitle.textContent =
+                "Bird";
+
+            typeText.textContent =
+                "Bird profile selected.";
+
+            typePreview.style.display =
+                "flex";
+
+        }
+
+        else if(type === "rabbit"){
+
+            typeImage.src =
+                "{{ url_for('static', filename='pet_rabbit.png') }}";
+
+            typeTitle.textContent =
+                "Rabbit";
+
+            typeText.textContent =
+                "Rabbit profile selected.";
+
+            typePreview.style.display =
+                "flex";
+
+        }
+
+        else if(type === "other"){
+
+            typeImage.src =
+                "{{ url_for('static', filename='pet_other.png') }}";
+
+            typeTitle.textContent =
+                "Other Pet";
+
+            typeText.textContent =
+                "Other pet type selected.";
+
+            typePreview.style.display =
+                "flex";
+
+        }
+
+        else{
+
+            typePreview.style.display =
+                "none";
+
+        }
+
+    });
+
+</script>
+
+
+</body>
+
+</html>

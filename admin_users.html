@@ -1,0 +1,760 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Users - PetCare AI Admin</title>
+
+    <style>
+
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+            font-family:Arial, Helvetica, sans-serif;
+        }
+
+        body{
+            background:#f5f7fb;
+            color:#1e293b;
+        }
+
+        .layout{
+            display:flex;
+            min-height:100vh;
+        }
+
+        /* =========================
+           SIDEBAR
+        ========================= */
+
+        .sidebar{
+            width:240px;
+            background:#ffffff;
+            border-right:1px solid #edf0f5;
+            position:fixed;
+            left:0;
+            top:0;
+            bottom:0;
+            padding:25px 15px;
+            display:flex;
+            flex-direction:column;
+            z-index:20;
+        }
+
+        .logo{
+            display:flex;
+            align-items:center;
+            gap:9px;
+            padding:5px 12px 30px;
+            font-size:20px;
+            font-weight:800;
+            color:#26344c;
+        }
+
+        .logo-icon{
+            font-size:25px;
+        }
+
+        .logo span{
+            color:#44bd82;
+        }
+
+        .admin-label{
+            font-size:9px;
+            color:#8a94a4;
+            letter-spacing:1px;
+            margin:0 12px 12px;
+            text-transform:uppercase;
+        }
+
+        .menu{
+            display:flex;
+            flex-direction:column;
+            gap:6px;
+        }
+
+        .menu a{
+            text-decoration:none;
+            color:#526078;
+            padding:12px 13px;
+            border-radius:11px;
+            font-size:12px;
+            font-weight:600;
+            display:flex;
+            align-items:center;
+            gap:12px;
+            transition:.2s;
+        }
+
+        .menu a:hover{
+            background:#eefaf5;
+            color:#129762;
+        }
+
+        .menu a.active{
+            background:#dff5eb;
+            color:#109460;
+        }
+
+        .menu-icon{
+            width:22px;
+            text-align:center;
+            font-size:16px;
+        }
+
+        .sidebar-bottom{
+            margin-top:auto;
+        }
+
+        .admin-user{
+            background:#f1f6f3;
+            border:1px solid #e4eee9;
+            border-radius:12px;
+            padding:12px;
+            margin-bottom:10px;
+        }
+
+        .admin-user-title{
+            font-size:10px;
+            color:#8490a1;
+            margin-bottom:4px;
+        }
+
+        .admin-user-name{
+            font-size:12px;
+            font-weight:bold;
+            color:#26344c;
+        }
+
+        .logout{
+            display:block;
+            text-decoration:none;
+            color:#e84d78;
+            background:#fff0f4;
+            padding:12px;
+            border-radius:10px;
+            text-align:center;
+            font-size:12px;
+            font-weight:bold;
+        }
+
+        .logout:hover{
+            background:#ffe2ea;
+        }
+
+        /* =========================
+           MAIN
+        ========================= */
+
+        .main{
+            margin-left:240px;
+            width:calc(100% - 240px);
+            padding:30px 35px 50px;
+        }
+
+        /* =========================
+           HEADER
+        ========================= */
+
+        .page-header{
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            margin-bottom:24px;
+        }
+
+        .page-title h1{
+            font-size:28px;
+            margin-bottom:7px;
+            color:#253148;
+        }
+
+        .page-title p{
+            color:#7b8798;
+            font-size:12px;
+        }
+
+        .header-icon{
+            width:46px;
+            height:46px;
+            border-radius:13px;
+            background:#dff5eb;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            font-size:21px;
+        }
+
+        /* =========================
+           SUMMARY CARD
+        ========================= */
+
+        .top-card{
+            background:linear-gradient(
+                135deg,
+                #effbf6,
+                #fbfffd
+            );
+            border:1px solid #e3f1ea;
+            border-radius:18px;
+            padding:20px;
+            margin-bottom:22px;
+            display:flex;
+            align-items:center;
+            justify-content:space-between;
+            gap:20px;
+        }
+
+        .top-left{
+            display:flex;
+            align-items:center;
+            gap:14px;
+        }
+
+        .top-icon{
+            width:52px;
+            height:52px;
+            border-radius:14px;
+            background:#ffffff;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            font-size:24px;
+        }
+
+        .top-card h2{
+            font-size:16px;
+            color:#2b4055;
+            margin-bottom:5px;
+        }
+
+        .top-card p{
+            color:#7f8a9a;
+            font-size:10px;
+        }
+
+        .count-badge{
+            background:#ffffff;
+            color:#139560;
+            border:1px solid #dceee5;
+            padding:9px 13px;
+            border-radius:9px;
+            font-size:10px;
+            font-weight:bold;
+            white-space:nowrap;
+        }
+
+        /* =========================
+           TABLE
+        ========================= */
+
+        .table-card{
+            background:white;
+            border:1px solid #edf0f5;
+            border-radius:18px;
+            padding:22px;
+            box-shadow:0 7px 25px rgba(30,45,75,.05);
+        }
+
+        .table-header{
+            display:flex;
+            justify-content:space-between;
+            align-items:flex-start;
+            margin-bottom:18px;
+        }
+
+        .table-header h2{
+            font-size:17px;
+            margin-bottom:5px;
+            color:#253148;
+        }
+
+        .table-header p{
+            color:#8993a4;
+            font-size:10px;
+        }
+
+        .table-wrapper{
+            width:100%;
+            overflow-x:auto;
+        }
+
+        table{
+            width:100%;
+            border-collapse:collapse;
+            min-width:650px;
+        }
+
+        th{
+            background:#f7f9fc;
+            color:#687489;
+            text-align:left;
+            font-size:9px;
+            padding:13px;
+            border-bottom:1px solid #e9edf2;
+            white-space:nowrap;
+        }
+
+        td{
+            padding:14px 13px;
+            border-bottom:1px solid #f0f2f6;
+            font-size:10px;
+            vertical-align:middle;
+        }
+
+        tbody tr:hover{
+            background:#fcfefd;
+        }
+
+        tbody tr:last-child td{
+            border-bottom:none;
+        }
+
+        /* =========================
+           USER
+        ========================= */
+
+        .user-cell{
+            display:flex;
+            align-items:center;
+            gap:10px;
+        }
+
+        .user-avatar{
+            width:38px;
+            height:38px;
+            border-radius:11px;
+            background:#eaf7f1;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            color:#169661;
+            font-size:16px;
+            flex-shrink:0;
+        }
+
+        .user-name{
+            color:#28354b;
+            font-size:11px;
+            font-weight:bold;
+            margin-bottom:3px;
+        }
+
+        .user-id{
+            color:#9aa3b1;
+            font-size:9px;
+        }
+
+        .email{
+            color:#667389;
+            font-size:10px;
+        }
+
+        .date{
+            color:#768196;
+            font-size:10px;
+        }
+
+        .status{
+            display:inline-block;
+            background:#e4f8ef;
+            color:#139560;
+            padding:6px 9px;
+            border-radius:7px;
+            font-size:9px;
+            font-weight:bold;
+        }
+
+        /* =========================
+           EMPTY
+        ========================= */
+
+        .empty-row{
+            text-align:center;
+            color:#8a94a5;
+            padding:45px !important;
+        }
+
+        /* =========================
+           NOTE
+        ========================= */
+
+        .note{
+            margin-top:18px;
+            background:#fff9ea;
+            border:1px solid #f6e8bf;
+            border-radius:12px;
+            padding:13px 16px;
+            color:#756747;
+            font-size:9px;
+            line-height:1.6;
+        }
+
+        /* =========================
+           RESPONSIVE
+        ========================= */
+
+        @media(max-width:750px){
+
+            .layout{
+                flex-direction:column;
+            }
+
+            .sidebar{
+                position:relative;
+                width:100%;
+                height:auto;
+            }
+
+            .main{
+                margin-left:0;
+                width:100%;
+                padding:20px;
+            }
+
+            .menu{
+                display:grid;
+                grid-template-columns:1fr 1fr;
+            }
+
+            .sidebar-bottom{
+                margin-top:15px;
+            }
+
+            .page-header{
+                align-items:flex-start;
+                gap:12px;
+            }
+
+            .top-card{
+                align-items:flex-start;
+                flex-direction:column;
+            }
+
+            .count-badge{
+                align-self:flex-start;
+            }
+        }
+
+    </style>
+</head>
+
+<body>
+
+<div class="layout">
+
+    <!-- =========================
+         SIDEBAR
+    ========================= -->
+
+    <aside class="sidebar">
+
+        <div class="logo">
+
+            <div class="logo-icon">
+                🐾
+            </div>
+
+            <div>
+                PetCare <span>AI</span>
+            </div>
+
+        </div>
+
+        <div class="admin-label">
+            Admin Panel
+        </div>
+
+        <nav class="menu">
+
+            <a href="/admin">
+
+                <span class="menu-icon">
+                    📊
+                </span>
+
+                Dashboard
+
+            </a>
+
+            <a href="/admin/users" class="active">
+
+                <span class="menu-icon">
+                    👥
+                </span>
+
+                Users
+
+            </a>
+
+            <a href="/admin/pets">
+
+                <span class="menu-icon">
+                    🐾
+                </span>
+
+                Pets
+
+            </a>
+
+            <a href="/admin/vaccinations">
+    <span class="menu-icon">💉</span>
+    Vaccinations
+</a>
+
+            <a href="/admin/health-reports">
+    <span class="menu-icon">📋</span>
+    Health Reports
+</a>
+
+        </nav>
+
+        <div class="sidebar-bottom">
+
+            <div class="admin-user">
+
+                <div class="admin-user-title">
+                    Logged in as
+                </div>
+
+                <div class="admin-user-name">
+                    PetCare Administrator
+                </div>
+
+            </div>
+
+            <a
+                href="{{ url_for('admin_logout') }}"
+                class="logout"
+            >
+                ⇥ &nbsp; Logout
+            </a>
+
+        </div>
+
+    </aside>
+
+
+    <!-- =========================
+         MAIN
+    ========================= -->
+
+    <main class="main">
+
+        <!-- HEADER -->
+
+        <div class="page-header">
+
+            <div class="page-title">
+
+                <h1>
+                    👥 Users
+                </h1>
+
+                <p>
+                    View all registered PetCare AI users.
+                </p>
+
+            </div>
+
+            <div class="header-icon">
+                👥
+            </div>
+
+        </div>
+
+
+        <!-- =========================
+             SUMMARY
+        ========================= -->
+
+        <div class="top-card">
+
+            <div class="top-left">
+
+                <div class="top-icon">
+                    👤
+                </div>
+
+                <div>
+
+                    <h2>
+                        Registered Users
+                    </h2>
+
+                    <p>
+                        Manage and review user accounts registered in the system.
+                    </p>
+
+                </div>
+
+            </div>
+
+            <div class="count-badge">
+                {{ users|length }} Users
+            </div>
+
+        </div>
+
+
+        <!-- =========================
+             USERS TABLE
+        ========================= -->
+
+        <div class="table-card">
+
+            <div class="table-header">
+
+                <div>
+
+                    <h2>
+                        User List
+                    </h2>
+
+                    <p>
+                        All registered users and account details.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="table-wrapper">
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                USER
+                            </th>
+
+                            <th>
+                                EMAIL ADDRESS
+                            </th>
+
+                            <th>
+                                REGISTERED DATE
+                            </th>
+
+                            <th>
+                                STATUS
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+                        {% for user in users %}
+
+                        <tr>
+
+                            <td>
+
+                                <div class="user-cell">
+
+                                    <div class="user-avatar">
+                                        👤
+                                    </div>
+
+                                    <div>
+
+                                        <div class="user-name">
+                                            {{ user.name }}
+                                        </div>
+
+                                        <div class="user-id">
+                                            User ID: #{{ user.id }}
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                            </td>
+
+
+                            <td>
+
+                                <div class="email">
+                                    {{ user.email }}
+                                </div>
+
+                            </td>
+
+
+                            <td>
+
+                                <div class="date">
+
+                                    {% if user.created_at %}
+                                        {{ user.created_at }}
+                                    {% else %}
+                                        —
+                                    {% endif %}
+
+                                </div>
+
+                            </td>
+
+
+                            <td>
+
+                                <span class="status">
+                                    ✓ Active
+                                </span>
+
+                            </td>
+
+                        </tr>
+
+                        {% else %}
+
+                        <tr>
+
+                            <td
+                                colspan="4"
+                                class="empty-row"
+                            >
+                                No registered users found.
+                            </td>
+
+                        </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+
+        <!-- NOTE -->
+
+        <div class="note">
+
+            <strong>Admin Note:</strong>
+
+            User information shown here is retrieved from the
+            registered accounts stored in the PetCare AI database.
+
+        </div>
+
+    </main>
+
+</div>
+
+</body>
+</html>

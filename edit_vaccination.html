@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Edit Vaccination - PetCare AI</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #f4fbf7;
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 700px;
+            margin: auto;
+        }
+
+        .card {
+            background: white;
+            padding: 35px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+        }
+
+        h1 {
+            color: #1f5136;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            color: #777;
+            margin-bottom: 30px;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        input,
+        textarea {
+            width: 100%;
+            padding: 13px 15px;
+            border: 1px solid #d7e5dc;
+            border-radius: 10px;
+            font-size: 15px;
+            outline: none;
+        }
+
+        input:focus,
+        textarea:focus {
+            border-color: #38a169;
+        }
+
+        textarea {
+            min-height: 110px;
+            resize: vertical;
+        }
+
+        .pet-box {
+            background: #eef9f2;
+            padding: 12px 15px;
+            border-radius: 10px;
+            color: #27613f;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 12px;
+            margin-top: 25px;
+        }
+
+        .btn {
+            padding: 13px 25px;
+            border-radius: 10px;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+            font-size: 15px;
+        }
+
+        .save-btn {
+            background: #38a169;
+            color: white;
+        }
+
+        .save-btn:hover {
+            background: #2f855a;
+        }
+
+        .cancel-btn {
+            background: #eeeeee;
+            color: #333;
+        }
+
+        .cancel-btn:hover {
+            background: #dddddd;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="card">
+
+        <h1>✏️ Edit Vaccination</h1>
+
+        <p class="subtitle">
+            Update your pet's vaccination information.
+        </p>
+
+        <div class="pet-box">
+            🐾 Pet: {{ vaccination.pet_name }}
+        </div>
+
+        <form method="POST">
+
+            <div class="input-group">
+                <label>Vaccine Name</label>
+
+                <input
+                    type="text"
+                    name="vaccine_name"
+                    value="{{ vaccination.vaccine_name }}"
+                    required
+                >
+            </div>
+
+            <div class="input-group">
+                <label>Vaccination Date</label>
+
+                <input
+                    type="date"
+                    name="vaccination_date"
+                    value="{{ vaccination.vaccination_date }}"
+                    required
+                >
+            </div>
+
+            <div class="input-group">
+                <label>Next Due Date</label>
+
+                <input
+                    type="date"
+                    name="next_due_date"
+                    value="{{ vaccination.next_due_date or '' }}"
+                >
+            </div>
+
+            <div class="input-group">
+                <label>Notes</label>
+
+                <textarea
+                    name="notes"
+                    placeholder="Enter vaccination notes..."
+                >{{ vaccination.notes or '' }}</textarea>
+            </div>
+
+            <div class="buttons">
+
+                <button
+                    type="submit"
+                    class="btn save-btn"
+                >
+                    Save Changes
+                </button>
+
+                <a
+                    href="{{ url_for('vaccination') }}"
+                    class="btn cancel-btn"
+                >
+                    Cancel
+                </a>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>PetCare AI - My Pets</title>
+
+    <style>
+
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+            font-family:Arial, Helvetica, sans-serif;
+        }
+
+        body{
+            background:#f7fbff;
+            color:#17233c;
+        }
+
+        /* ===== LAYOUT ===== */
+
+        .layout{
+            display:flex;
+            min-height:100vh;
+        }
+
+        /* ===== SIDEBAR ===== */
+
+        .sidebar{
+            width:235px;
+            background:#ffffff;
+            border-right:1px solid #edf0f5;
+            padding:25px 15px;
+            position:fixed;
+            left:0;
+            top:0;
+            bottom:0;
+            display:flex;
+            flex-direction:column;
+            z-index:10;
+        }
+
+        .logo{
+            display:flex;
+            align-items:center;
+            gap:8px;
+            font-size:20px;
+            font-weight:800;
+            padding:5px 12px 30px;
+        }
+
+        .logo-paw{
+            font-size:25px;
+        }
+
+        .logo span{
+            color:#16a36a;
+        }
+
+        .menu{
+            display:flex;
+            flex-direction:column;
+            gap:7px;
+        }
+
+        .menu a{
+            text-decoration:none;
+            color:#526078;
+            padding:12px 13px;
+            border-radius:11px;
+            font-size:13px;
+            font-weight:600;
+            display:flex;
+            align-items:center;
+            gap:12px;
+            transition:.2s;
+        }
+
+        .menu a:hover{
+            background:#eefaf5;
+            color:#129762;
+        }
+
+        .menu a.active{
+            background:#dff5eb;
+            color:#109460;
+        }
+
+        .menu-icon{
+            width:22px;
+            text-align:center;
+            font-size:17px;
+        }
+
+        .logout{
+            margin-top:auto;
+            text-decoration:none;
+            color:#f04472;
+            background:#fff0f4;
+            padding:12px;
+            border-radius:12px;
+            text-align:center;
+            font-weight:700;
+            font-size:13px;
+        }
+
+        /* ===== MAIN ===== */
+
+        .main{
+            margin-left:235px;
+            width:calc(100% - 235px);
+            padding:30px 35px 50px;
+        }
+
+        /* ===== HEADER ===== */
+
+        .page-header{
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            margin-bottom:25px;
+        }
+
+        .page-title h1{
+            font-size:28px;
+            margin-bottom:7px;
+        }
+
+        .page-title p{
+            color:#7d8798;
+            font-size:13px;
+        }
+
+        .add-btn{
+            text-decoration:none;
+            background:#19a66a;
+            color:white;
+            padding:12px 19px;
+            border-radius:10px;
+            font-size:12px;
+            font-weight:bold;
+            box-shadow:0 6px 18px rgba(25,166,106,.18);
+        }
+
+        .add-btn:hover{
+            background:#128b58;
+        }
+
+        /* ===== INFO ===== */
+
+        .info-banner{
+            background:linear-gradient(
+                100deg,
+                #e9faf3,
+                #f3f1ff,
+                #fff5e7
+            );
+
+            border-radius:18px;
+            padding:18px 22px;
+            margin-bottom:25px;
+
+            display:flex;
+            align-items:center;
+            gap:15px;
+        }
+
+        .info-icon{
+            width:48px;
+            height:48px;
+            border-radius:14px;
+            background:white;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            font-size:25px;
+        }
+
+        .info-banner h3{
+            font-size:14px;
+            margin-bottom:5px;
+        }
+
+        .info-banner p{
+            color:#727d90;
+            font-size:11px;
+        }
+
+        /* ===== PET GRID ===== */
+
+        .pet-grid{
+            display:grid;
+            grid-template-columns:repeat(3,1fr);
+            gap:20px;
+        }
+
+        /* ===== PET CARD ===== */
+
+        .pet-card{
+            background:white;
+            border-radius:18px;
+            padding:14px;
+            border:1px solid #edf0f5;
+            box-shadow:0 7px 25px rgba(30,45,75,.06);
+            transition:.25s;
+        }
+
+        .pet-card:hover{
+            transform:translateY(-4px);
+            box-shadow:0 12px 30px rgba(30,45,75,.10);
+        }
+
+        /* ===== PET PHOTO ===== */
+
+        .pet-photo{
+            height:185px;
+            border-radius:14px;
+            overflow:hidden;
+            background:#eefaf6;
+            position:relative;
+            margin-bottom:15px;
+        }
+
+        .pet-photo img{
+            width:100%;
+            height:100%;
+            object-fit:cover;
+            display:block;
+        }
+
+        .paw{
+            position:absolute;
+            right:12px;
+            top:10px;
+            font-size:22px;
+            opacity:.35;
+        }
+
+        /* ===== PET INFO ===== */
+
+        .pet-name{
+            font-size:18px;
+            margin-bottom:5px;
+        }
+
+        .pet-breed{
+            color:#7d8798;
+            font-size:12px;
+            margin-bottom:15px;
+        }
+
+        .pet-details{
+            display:grid;
+            grid-template-columns:1fr 1fr;
+            gap:8px;
+            margin-bottom:16px;
+        }
+
+        .detail{
+            background:#f8fafc;
+            border-radius:9px;
+            padding:9px;
+            font-size:10px;
+            color:#737e90;
+        }
+
+        .detail strong{
+            display:block;
+            color:#29364d;
+            font-size:11px;
+            margin-bottom:3px;
+        }
+
+        /* ===== ACTIONS ===== */
+
+        .actions{
+            display:flex;
+            gap:8px;
+        }
+
+        .edit-btn{
+            flex:1;
+            text-decoration:none;
+            text-align:center;
+            background:#e7f8f0;
+            color:#119460;
+            padding:9px;
+            border-radius:9px;
+            font-size:11px;
+            font-weight:bold;
+        }
+
+        .delete-btn{
+            width:42px;
+            border:none;
+            background:#fff0f4;
+            color:#ee4775;
+            border-radius:9px;
+            font-size:15px;
+            cursor:pointer;
+        }
+
+        /* ===== ADD PET CARD ===== */
+
+        .add-card{
+            min-height:390px;
+            border:2px dashed #cfe7dd;
+            border-radius:18px;
+            background:#fbfffd;
+
+            display:flex;
+            flex-direction:column;
+            align-items:center;
+            justify-content:center;
+
+            text-align:center;
+            padding:25px;
+        }
+
+        .add-circle{
+            width:70px;
+            height:70px;
+            border-radius:50%;
+            background:#e4f8ef;
+
+            display:flex;
+            align-items:center;
+            justify-content:center;
+
+            color:#19a66a;
+            font-size:34px;
+
+            margin-bottom:17px;
+        }
+
+        .add-card h3{
+            font-size:16px;
+            margin-bottom:8px;
+        }
+
+        .add-card p{
+            color:#8992a3;
+            font-size:11px;
+            line-height:1.6;
+            max-width:190px;
+            margin-bottom:18px;
+        }
+
+        .add-card a{
+            text-decoration:none;
+            background:#19a66a;
+            color:white;
+            padding:10px 18px;
+            border-radius:9px;
+            font-size:11px;
+            font-weight:bold;
+        }
+
+        /* ===== EMPTY ===== */
+
+        .empty{
+            background:white;
+            border-radius:18px;
+            padding:60px 20px;
+            text-align:center;
+            border:1px solid #edf0f5;
+        }
+
+        .empty-icon{
+            font-size:50px;
+            margin-bottom:15px;
+        }
+
+        .empty h2{
+            font-size:19px;
+            margin-bottom:8px;
+        }
+
+        .empty p{
+            color:#7d8798;
+            font-size:12px;
+            margin-bottom:20px;
+        }
+
+        .empty a{
+            display:inline-block;
+            text-decoration:none;
+            background:#19a66a;
+            color:white;
+            padding:11px 20px;
+            border-radius:9px;
+            font-size:12px;
+            font-weight:bold;
+        }
+
+        /* ===== RESPONSIVE ===== */
+
+        @media(max-width:1050px){
+
+            .sidebar{
+                width:205px;
+            }
+
+            .main{
+                margin-left:205px;
+                width:calc(100% - 205px);
+                padding:25px;
+            }
+
+            .pet-grid{
+                grid-template-columns:repeat(2,1fr);
+            }
+        }
+
+        @media(max-width:750px){
+
+            .layout{
+                flex-direction:column;
+            }
+
+            .sidebar{
+                position:relative;
+                width:100%;
+                height:auto;
+            }
+
+            .main{
+                margin-left:0;
+                width:100%;
+            }
+
+            .menu{
+                display:grid;
+                grid-template-columns:repeat(2,1fr);
+            }
+
+            .logout{
+                margin-top:15px;
+            }
+
+            .page-header{
+                align-items:flex-start;
+                gap:15px;
+            }
+
+            .pet-grid{
+                grid-template-columns:1fr;
+            }
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<div class="layout">
+
+    <!-- SIDEBAR -->
+
+    <aside class="sidebar">
+
+        <div class="logo">
+            <div class="logo-paw">🐾</div>
+            <div>PetCare <span>AI</span></div>
+        </div>
+
+        <nav class="menu">
+
+            <a href="/dashboard">
+                <span class="menu-icon">⌂</span>
+                Dashboard
+            </a>
+
+            <a href="/pets" class="active">
+                <span class="menu-icon">🐾</span>
+                My Pets
+            </a>
+
+            <a href="/vaccination">
+                <span class="menu-icon">💉</span>
+                Vaccination
+            </a>
+
+            <a href="/health-records">
+                <span class="menu-icon">📋</span>
+                Health Records
+            </a>
+
+            <a href="/ai-health">
+                <span class="menu-icon">🤖</span>
+                AI Health Checker
+            </a>
+
+            <a href="/nearby-vet">
+                <span class="menu-icon">📍</span>
+                Nearby Veterinarians
+            </a>
+
+            <a href="/notifications">
+                <span class="menu-icon">🔔</span>
+                Notifications
+            </a>
+
+            <a href="/profile">
+                <span class="menu-icon">👤</span>
+                Profile
+            </a>
+
+        </nav>
+
+        <a href="/logout" class="logout">
+            ⇥ &nbsp; Logout
+        </a>
+
+    </aside>
+
+
+    <!-- MAIN -->
+
+    <main class="main">
+
+        <!-- HEADER -->
+
+        <div class="page-header">
+
+            <div class="page-title">
+
+                <h1>My Pets</h1>
+
+                <p>
+                    Manage your pet's profile, photos and important information.
+                </p>
+
+            </div>
+
+            <a href="/add-pet" class="add-btn">
+                + Add Pet
+            </a>
+
+        </div>
+
+
+        <!-- INFO BANNER -->
+
+        <div class="info-banner">
+
+            <div class="info-icon">
+                🐾
+            </div>
+
+            <div>
+
+                <h3>
+                    Your pets, all in one place
+                </h3>
+
+                <p>
+                    Keep your pet information organized and easily manage
+                    their health, vaccination and care.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        {% if pets %}
+
+        <div class="pet-grid">
+
+            {% for pet in pets %}
+
+            <!-- PET CARD -->
+
+            <div class="pet-card">
+
+                <div class="pet-photo">
+
+                    <div class="paw">🐾</div>
+
+                    {% if pet.pet_type|lower == "dog" %}
+
+                        <img
+                            src="{{ url_for('static', filename='pet_dog.png') }}"
+                            alt="{{ pet.pet_name }}"
+                        >
+
+                    {% elif pet.pet_type|lower == "cat" %}
+
+                        <img
+                            src="{{ url_for('static', filename='pet_cat.png') }}"
+                            alt="{{ pet.pet_name }}"
+                        >
+
+                    {% else %}
+
+                        <div style="
+                            height:100%;
+                            display:flex;
+                            align-items:center;
+                            justify-content:center;
+                            font-size:70px;
+                        ">
+                            🐾
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+
+                <h2 class="pet-name">
+                    {{ pet.pet_name }}
+                </h2>
+
+
+                <p class="pet-breed">
+                    {{ pet.pet_type }} • {{ pet.breed or "Breed not added" }}
+                </p>
+
+
+                <div class="pet-details">
+
+                    <div class="detail">
+
+                        <strong>🎂 Age</strong>
+
+                        {% if pet.age %}
+                            {{ pet.age }} Years
+                        {% else %}
+                            Not added
+                        {% endif %}
+
+                    </div>
+
+
+                    <div class="detail">
+
+                        <strong>⚖️ Weight</strong>
+
+                        {% if pet.weight %}
+                            {{ pet.weight }} kg
+                        {% else %}
+                            Not added
+                        {% endif %}
+
+                    </div>
+
+
+                    <div class="detail">
+
+                        <strong>❤️ Status</strong>
+
+                        Healthy
+
+                    </div>
+
+
+                    <div class="detail">
+
+                        <strong>🐾 Type</strong>
+
+                        {{ pet.pet_type }}
+
+                    </div>
+
+                </div>
+
+
+                <div class="actions">
+
+    <a href="{{ url_for('edit_pet', pet_id=pet.id) }}" class="edit-btn">
+    ✏️ Edit
+    </a>
+
+
+    <form
+    method="POST"
+    action="{{ url_for('delete_pet', pet_id=pet.id) }}"
+    onsubmit="return confirm('Are you sure you want to delete {{ pet.pet_name }}?');"
+    style="display:inline;"
+>
+    <button type="submit" class="delete-btn">
+        🗑
+    </button>
+</form>
+
+</div>
+
+            </div>
+
+            {% endfor %}
+
+
+            <!-- ADD PET -->
+
+            <div class="add-card">
+
+                <div class="add-circle">
+                    +
+                </div>
+
+                <h3>
+                    Add New Pet
+                </h3>
+
+                <p>
+                    Add your new pet and start tracking
+                    their health and care.
+                </p>
+
+                <a href="/add-pet">
+                    + Add Pet
+                </a>
+
+            </div>
+
+        </div>
+
+
+        {% else %}
+
+        <!-- EMPTY STATE -->
+
+        <div class="empty">
+
+            <div class="empty-icon">
+                🐾
+            </div>
+
+            <h2>
+                No Pets Added Yet
+            </h2>
+
+            <p>
+                Add your first pet to start managing
+                vaccinations and health records.
+            </p>
+
+            <a href="/add-pet">
+                + Add Your First Pet
+            </a>
+
+        </div>
+
+        {% endif %}
+
+    </main>
+
+</div>
+
+</body>
+
+</html>

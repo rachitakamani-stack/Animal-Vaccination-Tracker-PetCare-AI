@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Login | PetCare AI</title>
+
+    <style>
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+        }
+
+        body{
+            min-height:100vh;
+            font-family:Arial, Helvetica, sans-serif;
+            background:
+                radial-gradient(circle at 10% 20%, #dff8e9 0, transparent 25%),
+                radial-gradient(circle at 90% 80%, #d9f5e5 0, transparent 28%),
+                linear-gradient(135deg,#f4fff8,#ecfaf2);
+            color:#17253a;
+        }
+
+        a{
+            text-decoration:none;
+        }
+
+        .page{
+            min-height:100vh;
+            padding:28px 6%;
+            position:relative;
+            overflow:hidden;
+        }
+
+        /* Decorative shapes */
+
+        .shape{
+            position:absolute;
+            border-radius:50%;
+            background:rgba(188,237,208,.35);
+            z-index:0;
+        }
+
+        .shape.one{
+            width:250px;
+            height:250px;
+            top:-100px;
+            left:-80px;
+        }
+
+        .shape.two{
+            width:300px;
+            height:300px;
+            right:-130px;
+            bottom:-120px;
+        }
+
+        .shape.three{
+            width:90px;
+            height:90px;
+            right:20%;
+            top:12%;
+            background:rgba(174,229,196,.25);
+        }
+
+        /* Header */
+
+        .header{
+            max-width:1250px;
+            margin:auto;
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            position:relative;
+            z-index:2;
+        }
+
+        .logo{
+            display:flex;
+            align-items:center;
+            gap:10px;
+        }
+
+        .logo-icon{
+            width:45px;
+            height:45px;
+            border-radius:14px;
+            background:#dff7e9;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            font-size:24px;
+        }
+
+        .logo-text{
+            font-size:25px;
+            font-weight:800;
+            color:#14243a;
+        }
+
+        .logo-text span{
+            color:#129765;
+        }
+
+        .home-link{
+            color:#159764;
+            font-size:14px;
+            font-weight:700;
+            padding:11px 17px;
+            border-radius:10px;
+            transition:.2s;
+        }
+
+        .home-link:hover{
+            background:#ffffff;
+        }
+
+        /* Main */
+
+        .main{
+            max-width:1100px;
+            min-height:calc(100vh - 105px);
+            margin:auto;
+            display:grid;
+            grid-template-columns:1fr 470px;
+            align-items:center;
+            gap:70px;
+            position:relative;
+            z-index:2;
+        }
+
+        /* Left */
+
+        .intro{
+            padding-left:15px;
+        }
+
+        .badge{
+            display:inline-block;
+            background:#ddf7e8;
+            color:#11865a;
+            padding:9px 15px;
+            border-radius:25px;
+            font-size:12px;
+            font-weight:700;
+            margin-bottom:20px;
+        }
+
+        .intro h1{
+            font-size:52px;
+            line-height:1.08;
+            letter-spacing:-1.5px;
+            margin-bottom:18px;
+        }
+
+        .intro h1 span{
+            color:#159764;
+        }
+
+        .intro p{
+            color:#6e7c8e;
+            font-size:16px;
+            line-height:1.7;
+            max-width:430px;
+        }
+
+        .features{
+            margin-top:35px;
+            display:flex;
+            flex-direction:column;
+            gap:15px;
+        }
+
+        .feature{
+            display:flex;
+            align-items:center;
+            gap:14px;
+            color:#43546a;
+            font-size:14px;
+            font-weight:600;
+        }
+
+        .feature-icon{
+            width:44px;
+            height:44px;
+            border-radius:14px;
+            background:#ffffff;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            font-size:20px;
+            box-shadow:0 7px 20px rgba(34,80,54,.07);
+        }
+
+        /* Login Card */
+
+        .card{
+            background:rgba(255,255,255,.96);
+            border:1px solid #e6eee9;
+            border-radius:28px;
+            padding:38px;
+            box-shadow:0 20px 50px rgba(35,70,50,.10);
+        }
+
+        .card-title{
+            font-size:30px;
+            margin-bottom:8px;
+        }
+
+        .card-title span{
+            color:#159764;
+        }
+
+        .card-subtitle{
+            color:#8490a0;
+            font-size:14px;
+            margin-bottom:27px;
+        }
+
+        /* Flash */
+
+        .flash{
+            padding:11px 14px;
+            border-radius:10px;
+            margin-bottom:15px;
+            font-size:13px;
+        }
+
+        .flash.error{
+            background:#fff0f3;
+            color:#d94c70;
+        }
+
+        .flash.success{
+            background:#e9f9ef;
+            color:#13875a;
+        }
+
+        /* Form */
+
+        .form-group{
+            margin-bottom:17px;
+        }
+
+        .form-group label{
+            display:block;
+            font-size:12px;
+            color:#526075;
+            font-weight:700;
+            margin-bottom:7px;
+        }
+
+        .input-box{
+            position:relative;
+        }
+
+        .input-box input{
+            width:100%;
+            height:52px;
+            border:1px solid #dce5e0;
+            border-radius:13px;
+            padding:0 45px 0 15px;
+            outline:none;
+            font-size:14px;
+            color:#26364b;
+            background:#ffffff;
+            transition:.2s;
+        }
+
+        .input-box input:focus{
+            border-color:#159764;
+            box-shadow:0 0 0 3px rgba(21,151,100,.08);
+        }
+
+        .input-icon{
+            position:absolute;
+            right:15px;
+            top:50%;
+            transform:translateY(-50%);
+            color:#8793a2;
+            font-size:18px;
+        }
+
+        .password-toggle{
+            cursor:pointer;
+        }
+
+        .options{
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            margin:3px 0 22px;
+            font-size:12px;
+        }
+
+        .remember{
+            display:flex;
+            align-items:center;
+            gap:7px;
+            color:#627086;
+        }
+
+        .remember input{
+            accent-color:#159764;
+        }
+
+        .forgot{
+            color:#159764;
+            font-weight:700;
+        }
+
+        .login-btn{
+            width:100%;
+            height:52px;
+            border:none;
+            border-radius:13px;
+            background:#159764;
+            color:white;
+            font-size:15px;
+            font-weight:700;
+            cursor:pointer;
+            transition:.2s;
+            box-shadow:0 10px 22px rgba(21,151,100,.18);
+        }
+
+        .login-btn:hover{
+            background:#108554;
+            transform:translateY(-1px);
+        }
+
+        .bottom-text{
+            text-align:center;
+            color:#7b8797;
+            font-size:13px;
+            margin-top:24px;
+        }
+
+        .bottom-text a{
+            color:#159764;
+            font-weight:700;
+        }
+
+        /* Responsive */
+
+        @media(max-width:900px){
+
+            .main{
+                grid-template-columns:1fr;
+                max-width:520px;
+                gap:30px;
+                padding:50px 0;
+            }
+
+            .intro{
+                text-align:center;
+                padding:0;
+            }
+
+            .intro p{
+                margin:auto;
+            }
+
+            .features{
+                align-items:center;
+            }
+
+            .card{
+                width:100%;
+            }
+        }
+
+        @media(max-width:550px){
+
+            .page{
+                padding:20px 5%;
+            }
+
+            .intro h1{
+                font-size:39px;
+            }
+
+            .card{
+                padding:27px 22px;
+                border-radius:22px;
+            }
+
+            .card-title{
+                font-size:27px;
+            }
+
+            .header{
+                align-items:center;
+            }
+
+            .logo-text{
+                font-size:21px;
+            }
+
+            .home-link{
+                padding:8px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="page">
+
+    <div class="shape one"></div>
+    <div class="shape two"></div>
+    <div class="shape three"></div>
+
+    <!-- Header -->
+
+    <header class="header">
+
+        <a href="{{ url_for('home') }}" class="logo">
+
+            <div class="logo-icon">
+                🐾
+            </div>
+
+            <div class="logo-text">
+                PetCare <span>AI</span>
+            </div>
+
+        </a>
+
+        <a href="{{ url_for('home') }}" class="home-link">
+            ← Back to Home
+        </a>
+
+    </header>
+
+
+    <!-- Main -->
+
+    <main class="main">
+
+        <!-- Intro -->
+
+        <section class="intro">
+
+            <div class="badge">
+                🐾 Welcome Back
+            </div>
+
+            <h1>
+                Smarter Pet Care<br>
+                Starts <span>Here.</span>
+            </h1>
+
+            <p>
+                Manage your pet's health, vaccinations and
+                records easily with PetCare AI.
+            </p>
+
+
+            <div class="features">
+
+                <div class="feature">
+
+                    <div class="feature-icon">
+                        🩺
+                    </div>
+
+                    <span>
+                        AI Health Insights
+                    </span>
+
+                </div>
+
+
+                <div class="feature">
+
+                    <div class="feature-icon">
+                        💉
+                    </div>
+
+                    <span>
+                        Vaccination Reminders
+                    </span>
+
+                </div>
+
+
+                <div class="feature">
+
+                    <div class="feature-icon">
+                        📄
+                    </div>
+
+                    <span>
+                        Digital Health Records
+                    </span>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- Login Card -->
+
+        <section class="card">
+
+            <h2 class="card-title">
+                Login to <span>PetCare AI</span>
+            </h2>
+
+            <p class="card-subtitle">
+                Enter your credentials to continue.
+            </p>
+
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+
+                {% if messages %}
+
+                    {% for category, message in messages %}
+
+                        <div class="flash {{ category }}">
+                            {{ message }}
+                        </div>
+
+                    {% endfor %}
+
+                {% endif %}
+
+            {% endwith %}
+
+
+            <form method="POST" action="{{ url_for('login') }}">
+
+                <!-- Email -->
+
+                <div class="form-group">
+
+                    <label for="email">
+                        Email Address
+                    </label>
+
+                    <div class="input-box">
+
+                        <input
+                            type="email"
+                            id="email"
+                            name="email"
+                            placeholder="Enter your email"
+                            required
+                        >
+
+                        <span class="input-icon">
+                            ✉
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Password -->
+
+                <div class="form-group">
+
+                    <label for="password">
+                        Password
+                    </label>
+
+                    <div class="input-box">
+
+                        <input
+                            type="password"
+                            id="password"
+                            name="password"
+                            placeholder="Enter your password"
+                            required
+                        >
+
+                        <span
+                            class="input-icon password-toggle"
+                            onclick="togglePassword()"
+                            id="eye"
+                        >
+                            👁
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Options -->
+
+                <div class="options">
+
+                    <label class="remember">
+
+                        <input
+                            type="checkbox"
+                            name="remember"
+                        >
+
+                        Remember me
+
+                    </label>
+
+
+                    <a href="#" class="forgot">
+                        Forgot Password?
+                    </a>
+
+                </div>
+
+
+                <!-- Button -->
+
+                <button type="submit" class="login-btn">
+                    Login →
+                </button>
+
+            </form>
+
+
+            <div class="bottom-text">
+
+                Don't have an account?
+
+                <a href="{{ url_for('register') }}">
+                    Sign Up
+                </a>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+
+<script>
+
+function togglePassword(){
+
+    const password = document.getElementById("password");
+    const eye = document.getElementById("eye");
+
+    if(password.type === "password"){
+
+        password.type = "text";
+        eye.textContent = "🙈";
+
+    }else{
+
+        password.type = "password";
+        eye.textContent = "👁";
+
+    }
+}
+
+</script>
+
+</body>
+</html>

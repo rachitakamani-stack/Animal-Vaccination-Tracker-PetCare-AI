@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nearby Veterinarian - PetCare AI</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f5f9fc;
+            color: #12395b;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+
+        .card {
+            background: white;
+            padding: 35px;
+            border-radius: 18px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+            text-align: center;
+        }
+
+        h1 {
+            margin-bottom: 10px;
+            color: #12395b;
+        }
+
+        .subtitle {
+            color: #66788a;
+            font-size: 17px;
+            margin-bottom: 30px;
+        }
+
+        .icon {
+            font-size: 55px;
+            margin-bottom: 10px;
+        }
+
+        input {
+            width: 100%;
+            max-width: 550px;
+            padding: 14px;
+            border: 1px solid #ccd6df;
+            border-radius: 10px;
+            font-size: 16px;
+            margin-bottom: 15px;
+        }
+
+        button {
+            background: #12395b;
+            color: white;
+            border: none;
+            padding: 14px 25px;
+            border-radius: 10px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #0d2d49;
+        }
+
+        .info {
+            margin-top: 30px;
+            padding: 20px;
+            background: #eef6fb;
+            border-radius: 12px;
+            text-align: left;
+        }
+
+        .info h3 {
+            margin-top: 0;
+        }
+
+        .back {
+            display: inline-block;
+            margin-top: 25px;
+            text-decoration: none;
+            color: #12395b;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="card">
+
+        <div class="icon">🏥🐾</div>
+
+        <h1>Nearby Veterinarian</h1>
+
+        <p class="subtitle">
+            Find veterinary clinics and animal hospitals near your location.
+        </p>
+
+        <input
+            type="text"
+            id="location"
+            placeholder="Enter your city or area"
+        >
+
+        <br>
+
+        <button onclick="findVet()">
+            🔍 Find Veterinarian
+        </button>
+
+        <div class="info">
+            <h3>How it works</h3>
+            <p>
+                Enter your city or area and click
+                <b>Find Veterinarian</b>.
+                The system will open a map search showing nearby
+                veterinary clinics.
+            </p>
+        </div>
+
+        <a href="{{ url_for('dashboard') }}" class="back">
+            ← Back to Dashboard
+        </a>
+
+    </div>
+
+</div>
+
+<script>
+function findVet() {
+
+    let location = document.getElementById("location").value.trim();
+
+    if (location === "") {
+        alert("Please enter your city or area.");
+        return;
+    }
+
+    let searchQuery = "veterinarian near " + location;
+
+    let mapUrl =
+        "https://www.google.com/maps/search/?api=1&query="
+        + encodeURIComponent(searchQuery);
+
+    window.open(mapUrl, "_blank");
+}
+</script>
+
+</body>
+</html>

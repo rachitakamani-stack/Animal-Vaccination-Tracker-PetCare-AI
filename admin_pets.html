@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Pets - PetCare AI Admin</title>
+
+    <style>
+
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+            font-family:Arial, Helvetica, sans-serif;
+        }
+
+        body{
+            background:#f5f7fb;
+            color:#1e293b;
+        }
+
+        .layout{
+            display:flex;
+            min-height:100vh;
+        }
+
+        /* =========================
+           SIDEBAR
+        ========================= */
+
+        .sidebar{
+            width:240px;
+            background:#ffffff;
+            border-right:1px solid #edf0f5;
+            position:fixed;
+            left:0;
+            top:0;
+            bottom:0;
+            padding:25px 15px;
+            display:flex;
+            flex-direction:column;
+            z-index:20;
+        }
+
+        .logo{
+            display:flex;
+            align-items:center;
+            gap:9px;
+            padding:5px 12px 30px;
+            font-size:20px;
+            font-weight:800;
+            color:#26344c;
+        }
+
+        .logo-icon{
+            font-size:25px;
+        }
+
+        .logo span{
+            color:#44bd82;
+        }
+
+        .admin-label{
+            font-size:9px;
+            color:#8a94a4;
+            letter-spacing:1px;
+            margin:0 12px 12px;
+            text-transform:uppercase;
+        }
+
+        .menu{
+            display:flex;
+            flex-direction:column;
+            gap:6px;
+        }
+
+        .menu a{
+            text-decoration:none;
+            color:#526078;
+            padding:12px 13px;
+            border-radius:11px;
+            font-size:12px;
+            font-weight:600;
+            display:flex;
+            align-items:center;
+            gap:12px;
+            transition:.2s;
+        }
+
+        .menu a:hover{
+            background:#eefaf5;
+            color:#129762;
+        }
+
+        .menu a.active{
+            background:#dff5eb;
+            color:#109460;
+        }
+
+        .menu-icon{
+            width:22px;
+            text-align:center;
+            font-size:16px;
+        }
+
+        .sidebar-bottom{
+            margin-top:auto;
+        }
+
+        .admin-user{
+            background:#f1f6f3;
+            border:1px solid #e4eee9;
+            border-radius:12px;
+            padding:12px;
+            margin-bottom:10px;
+        }
+
+        .admin-user-title{
+            font-size:10px;
+            color:#8490a1;
+            margin-bottom:4px;
+        }
+
+        .admin-user-name{
+            font-size:12px;
+            font-weight:bold;
+            color:#26344c;
+        }
+
+        .logout{
+            display:block;
+            text-decoration:none;
+            color:#e84d78;
+            background:#fff0f4;
+            padding:12px;
+            border-radius:10px;
+            text-align:center;
+            font-size:12px;
+            font-weight:bold;
+        }
+
+        .logout:hover{
+            background:#ffe2ea;
+        }
+
+        /* =========================
+           MAIN
+        ========================= */
+
+        .main{
+            margin-left:240px;
+            width:calc(100% - 240px);
+            padding:30px 35px 50px;
+        }
+
+        /* =========================
+           HEADER
+        ========================= */
+
+        .page-header{
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            margin-bottom:24px;
+        }
+
+        .page-title h1{
+            font-size:28px;
+            margin-bottom:7px;
+            color:#253148;
+        }
+
+        .page-title p{
+            color:#7b8798;
+            font-size:12px;
+        }
+
+        .header-icon{
+            width:46px;
+            height:46px;
+            border-radius:13px;
+            background:#dff5eb;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            font-size:21px;
+        }
+
+        /* =========================
+           SUMMARY
+        ========================= */
+
+        .summary-card{
+            background:linear-gradient(
+                135deg,
+                #effbf6,
+                #fbfffd
+            );
+            border:1px solid #e3f1ea;
+            border-radius:18px;
+            padding:20px;
+            margin-bottom:22px;
+            display:flex;
+            align-items:center;
+            justify-content:space-between;
+        }
+
+        .summary-left{
+            display:flex;
+            align-items:center;
+            gap:14px;
+        }
+
+        .summary-icon{
+            width:52px;
+            height:52px;
+            border-radius:14px;
+            background:#ffffff;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            font-size:24px;
+        }
+
+        .summary-card h2{
+            font-size:16px;
+            color:#2b4055;
+            margin-bottom:5px;
+        }
+
+        .summary-card p{
+            color:#7f8a9a;
+            font-size:10px;
+        }
+
+        .count-badge{
+            background:#ffffff;
+            border:1px solid #dceee5;
+            color:#139560;
+            padding:9px 13px;
+            border-radius:9px;
+            font-size:10px;
+            font-weight:bold;
+        }
+
+        /* =========================
+           PET GRID
+        ========================= */
+
+        .pet-grid{
+            display:grid;
+            grid-template-columns:repeat(3,1fr);
+            gap:18px;
+        }
+
+        .pet-card{
+            background:#ffffff;
+            border:1px solid #edf0f5;
+            border-radius:18px;
+            overflow:hidden;
+            box-shadow:0 7px 25px rgba(30,45,75,.05);
+            transition:.2s;
+        }
+
+        .pet-card:hover{
+            transform:translateY(-3px);
+            box-shadow:0 11px 30px rgba(30,45,75,.08);
+        }
+
+        .pet-top{
+            height:120px;
+            background:linear-gradient(
+                135deg,
+                #eefaf5,
+                #f8fcff
+            );
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            font-size:52px;
+        }
+
+        .pet-content{
+            padding:18px;
+        }
+
+        .pet-name{
+            font-size:17px;
+            color:#29364d;
+            font-weight:800;
+            margin-bottom:5px;
+        }
+
+        .pet-breed{
+            color:#778397;
+            font-size:10px;
+            margin-bottom:15px;
+        }
+
+        .pet-details{
+            display:grid;
+            grid-template-columns:1fr 1fr;
+            gap:9px;
+            margin-bottom:14px;
+        }
+
+        .detail-box{
+            background:#f8fafc;
+            border:1px solid #edf0f4;
+            border-radius:10px;
+            padding:9px;
+        }
+
+        .detail-label{
+            display:block;
+            color:#9aa3b1;
+            font-size:8px;
+            margin-bottom:4px;
+        }
+
+        .detail-value{
+            color:#425069;
+            font-size:10px;
+            font-weight:bold;
+        }
+
+        .owner-box{
+            padding-top:12px;
+            border-top:1px solid #f0f2f6;
+            margin-top:4px;
+        }
+
+        .owner-label{
+            color:#9aa3b1;
+            font-size:8px;
+            margin-bottom:4px;
+        }
+
+        .owner-name{
+            color:#2f3d54;
+            font-size:10px;
+            font-weight:bold;
+            margin-bottom:3px;
+        }
+
+        .owner-email{
+            color:#7f8999;
+            font-size:9px;
+            word-break:break-word;
+        }
+
+        /* =========================
+           EMPTY
+        ========================= */
+
+        .empty{
+            background:white;
+            border:1px solid #edf0f5;
+            border-radius:18px;
+            padding:60px 20px;
+            text-align:center;
+            box-shadow:0 7px 25px rgba(30,45,75,.05);
+        }
+
+        .empty-icon{
+            width:70px;
+            height:70px;
+            margin:0 auto 15px;
+            border-radius:20px;
+            background:#eefaf5;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            font-size:32px;
+        }
+
+        .empty h2{
+            font-size:18px;
+            margin-bottom:8px;
+        }
+
+        .empty p{
+            color:#8791a2;
+            font-size:11px;
+        }
+
+        /* =========================
+           NOTE
+        ========================= */
+
+        .note{
+            margin-top:18px;
+            background:#fff9ea;
+            border:1px solid #f6e8bf;
+            border-radius:12px;
+            padding:13px 16px;
+            color:#756747;
+            font-size:9px;
+            line-height:1.6;
+        }
+
+        /* =========================
+           RESPONSIVE
+        ========================= */
+
+        @media(max-width:1050px){
+
+            .pet-grid{
+                grid-template-columns:repeat(2,1fr);
+            }
+        }
+
+        @media(max-width:750px){
+
+            .layout{
+                flex-direction:column;
+            }
+
+            .sidebar{
+                position:relative;
+                width:100%;
+                height:auto;
+            }
+
+            .main{
+                margin-left:0;
+                width:100%;
+                padding:20px;
+            }
+
+            .menu{
+                display:grid;
+                grid-template-columns:1fr 1fr;
+            }
+
+            .sidebar-bottom{
+                margin-top:15px;
+            }
+
+            .pet-grid{
+                grid-template-columns:1fr;
+            }
+
+            .summary-card{
+                align-items:flex-start;
+                gap:12px;
+            }
+        }
+
+    </style>
+</head>
+
+<body>
+
+<div class="layout">
+
+    <!-- =========================
+         SIDEBAR
+    ========================= -->
+
+    <aside class="sidebar">
+
+        <div class="logo">
+
+            <div class="logo-icon">
+                🐾
+            </div>
+
+            <div>
+                PetCare <span>AI</span>
+            </div>
+
+        </div>
+
+        <div class="admin-label">
+            Admin Panel
+        </div>
+
+        <nav class="menu">
+
+            <a href="/admin">
+
+                <span class="menu-icon">
+                    📊
+                </span>
+
+                Dashboard
+
+            </a>
+
+            <a href="/admin/users">
+
+                <span class="menu-icon">
+                    👥
+                </span>
+
+                Users
+
+            </a>
+
+            <a href="/admin/pets" class="active">
+
+                <span class="menu-icon">
+                    🐾
+                </span>
+
+                Pets
+
+            </a>
+
+            <a href="/admin/vaccinations">
+    <span class="menu-icon">💉</span>
+    Vaccinations
+</a>
+
+           <a href="/admin/health-reports">
+    <span class="menu-icon">📋</span>
+    Health Reports
+</a>
+
+        </nav>
+
+        <div class="sidebar-bottom">
+
+            <div class="admin-user">
+
+                <div class="admin-user-title">
+                    Logged in as
+                </div>
+
+                <div class="admin-user-name">
+                    PetCare Administrator
+                </div>
+
+            </div>
+
+            <a
+                href="{{ url_for('admin_logout') }}"
+                class="logout"
+            >
+                ⇥ &nbsp; Logout
+            </a>
+
+        </div>
+
+    </aside>
+
+
+    <!-- =========================
+         MAIN
+    ========================= -->
+
+    <main class="main">
+
+        <!-- HEADER -->
+
+        <div class="page-header">
+
+            <div class="page-title">
+
+                <h1>
+                    🐾 Pets
+                </h1>
+
+                <p>
+                    View all pets registered by PetCare AI users.
+                </p>
+
+            </div>
+
+            <div class="header-icon">
+                🐾
+            </div>
+
+        </div>
+
+
+        <!-- =========================
+             SUMMARY
+        ========================= -->
+
+        <div class="summary-card">
+
+            <div class="summary-left">
+
+                <div class="summary-icon">
+                    🐶
+                </div>
+
+                <div>
+
+                    <h2>
+                        Registered Pets
+                    </h2>
+
+                    <p>
+                        View pet information together with their owners.
+                    </p>
+
+                </div>
+
+            </div>
+
+            <div class="count-badge">
+                {{ pets|length }} Pets
+            </div>
+
+        </div>
+
+
+        <!-- =========================
+             PETS
+        ========================= -->
+
+        {% if pets %}
+
+        <div class="pet-grid">
+
+            {% for pet in pets %}
+
+            <div class="pet-card">
+
+                <div class="pet-top">
+
+                    {% if pet.pet_type|lower == "dog" %}
+                        🐶
+                    {% elif pet.pet_type|lower == "cat" %}
+                        🐱
+                    {% elif pet.pet_type|lower == "bird" %}
+                        🐦
+                    {% elif pet.pet_type|lower == "rabbit" %}
+                        🐰
+                    {% else %}
+                        🐾
+                    {% endif %}
+
+                </div>
+
+
+                <div class="pet-content">
+
+                    <div class="pet-name">
+                        {{ pet.pet_name }}
+                    </div>
+
+                    <div class="pet-breed">
+
+                        {% if pet.breed %}
+                            {{ pet.breed }}
+                        {% else %}
+                            {{ pet.pet_type }}
+                        {% endif %}
+
+                    </div>
+
+
+                    <div class="pet-details">
+
+                        <div class="detail-box">
+
+                            <span class="detail-label">
+                                PET TYPE
+                            </span>
+
+                            <span class="detail-value">
+                                {{ pet.pet_type }}
+                            </span>
+
+                        </div>
+
+
+                        <div class="detail-box">
+
+                            <span class="detail-label">
+                                AGE
+                            </span>
+
+                            <span class="detail-value">
+
+                                {% if pet.age is not none %}
+                                    {{ pet.age }} Years
+                                {% else %}
+                                    —
+                                {% endif %}
+
+                            </span>
+
+                        </div>
+
+
+                        <div class="detail-box">
+
+                            <span class="detail-label">
+                                WEIGHT
+                            </span>
+
+                            <span class="detail-value">
+
+                                {% if pet.weight is not none %}
+                                    {{ pet.weight }} kg
+                                {% else %}
+                                    —
+                                {% endif %}
+
+                            </span>
+
+                        </div>
+
+
+                        <div class="detail-box">
+
+                            <span class="detail-label">
+                                PET ID
+                            </span>
+
+                            <span class="detail-value">
+                                #{{ pet.id }}
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- OWNER -->
+
+                    <div class="owner-box">
+
+                        <div class="owner-label">
+                            OWNER
+                        </div>
+
+                        <div class="owner-name">
+                            {{ pet.user_name }}
+                        </div>
+
+                        <div class="owner-email">
+                            {{ pet.user_email }}
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+        {% else %}
+
+        <div class="empty">
+
+            <div class="empty-icon">
+                🐾
+            </div>
+
+            <h2>
+                No Pets Found
+            </h2>
+
+            <p>
+                No pets have been registered in the system yet.
+            </p>
+
+        </div>
+
+        {% endif %}
+
+
+        <!-- NOTE -->
+
+        <div class="note">
+
+            <strong>Admin Note:</strong>
+
+            This section displays pets registered by all users.
+            Pet information is retrieved from the PetCare AI database.
+
+        </div>
+
+    </main>
+
+</div>
+
+</body>
+</html>

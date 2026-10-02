@@ -1,0 +1,1110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Admin Dashboard - PetCare AI</title>
+
+    <style>
+
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+            font-family:Arial, Helvetica, sans-serif;
+        }
+
+        body{
+            background:#f5f7fb;
+            color:#1e293b;
+        }
+
+        .layout{
+            display:flex;
+            min-height:100vh;
+        }
+
+        /* =========================
+           SIDEBAR
+        ========================= */
+
+        .sidebar{
+    width:240px;
+    background:#ffffff;
+    color:#26344c;
+    border-right:1px solid #edf0f5;
+            position:fixed;
+            left:0;
+            top:0;
+            bottom:0;
+            padding:25px 15px;
+            display:flex;
+            flex-direction:column;
+            z-index:20;
+        }
+
+        .logo{
+            display:flex;
+            align-items:center;
+            gap:9px;
+            padding:5px 12px 30px;
+            font-size:20px;
+            font-weight:800;
+        }
+
+        .logo-icon{
+            font-size:25px;
+        }
+
+        .logo span{
+            color:#44c78a;
+        }
+
+        .logo{
+    color:#26344c;
+}
+
+        .admin-label{
+    font-size:9px;
+    color:#8a94a4;
+    letter-spacing:1px;
+    margin:0 12px 12px;
+    text-transform:uppercase;
+}
+
+        .menu{
+            display:flex;
+            flex-direction:column;
+            gap:6px;
+        }
+
+        .menu a{
+    text-decoration:none;
+    color:#526078;
+    padding:12px 13px;
+    border-radius:11px;
+    font-size:12px;
+    font-weight:600;
+    display:flex;
+    align-items:center;
+    gap:12px;
+    transition:.2s;
+}
+
+        .menu a:hover{
+    background:#eefaf5;
+    color:#129762;
+}
+
+.menu a.active{
+    background:#dff5eb;
+    color:#109460;
+}
+
+        .menu-icon{
+            width:22px;
+            text-align:center;
+            font-size:16px;
+        }
+
+        .sidebar-bottom{
+            margin-top:auto;
+        }
+
+       .admin-user{
+    background:#f1f6f3;
+    border:1px solid #e4eee9;
+    border-radius:12px;
+    padding:12px;
+    margin-bottom:10px;
+}
+
+.admin-user-title{
+    font-size:10px;
+    color:#8490a1;
+    margin-bottom:4px;
+}
+
+.admin-user-name{
+    font-size:12px;
+    font-weight:bold;
+    color:#26344c;
+}
+
+        .logout{
+    display:block;
+    text-decoration:none;
+    color:#e84d78;
+    background:#fff0f4;
+    padding:12px;
+    border-radius:10px;
+    text-align:center;
+    font-size:12px;
+    font-weight:bold;
+}
+
+        .logout:hover{
+            background:#452933;
+        }
+
+        /* =========================
+           MAIN
+        ========================= */
+
+        .main{
+            margin-left:240px;
+            width:calc(100% - 240px);
+            padding:30px 35px 50px;
+        }
+
+        /* =========================
+           HEADER
+        ========================= */
+
+        .page-header{
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            margin-bottom:25px;
+        }
+
+        .page-title h1{
+            font-size:28px;
+            margin-bottom:7px;
+        }
+
+        .page-title p{
+            color:#7b8798;
+            font-size:12px;
+        }
+
+        .header-badge{
+            background:#e3f7ec;
+            color:#139560;
+            padding:9px 13px;
+            border-radius:9px;
+            font-size:10px;
+            font-weight:bold;
+        }
+
+        /* =========================
+           STATS
+        ========================= */
+
+        .stats{
+            display:grid;
+            grid-template-columns:repeat(4,1fr);
+            gap:18px;
+            margin-bottom:24px;
+        }
+
+        .stat-card{
+            background:white;
+            border:1px solid #edf0f5;
+            border-radius:17px;
+            padding:19px;
+            box-shadow:0 6px 22px rgba(30,45,75,.05);
+        }
+
+        .stat-top{
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            margin-bottom:17px;
+        }
+
+        .stat-icon{
+            width:45px;
+            height:45px;
+            border-radius:12px;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            font-size:21px;
+        }
+
+        .green-icon{
+            background:#e3f7ec;
+        }
+
+        .blue-icon{
+            background:#eaf4ff;
+        }
+
+        .pink-icon{
+            background:#fff0f4;
+        }
+
+        .yellow-icon{
+            background:#fff7df;
+        }
+
+        .stat-label{
+            color:#818b9d;
+            font-size:10px;
+            font-weight:600;
+        }
+
+        .stat-number{
+            font-size:25px;
+            font-weight:800;
+            color:#243148;
+        }
+
+        .stat-line{
+            height:3px;
+            width:45px;
+            border-radius:5px;
+            background:#48bd85;
+        }
+
+        /* =========================
+           CONTENT GRID
+        ========================= */
+
+        .content-grid{
+            display:grid;
+            grid-template-columns:1fr;
+            gap:22px;
+        }
+
+        .table-card{
+            background:white;
+            border:1px solid #edf0f5;
+            border-radius:18px;
+            padding:22px;
+            box-shadow:0 7px 25px rgba(30,45,75,.05);
+        }
+
+        .table-header{
+            display:flex;
+            justify-content:space-between;
+            align-items:flex-start;
+            margin-bottom:18px;
+        }
+
+        .table-header h2{
+            font-size:17px;
+            margin-bottom:5px;
+        }
+
+        .table-header p{
+            color:#8993a4;
+            font-size:10px;
+        }
+
+        .count-badge{
+            background:#f1f4f8;
+            color:#687489;
+            padding:7px 10px;
+            border-radius:8px;
+            font-size:9px;
+            font-weight:bold;
+        }
+
+        .table-wrapper{
+            width:100%;
+            overflow-x:auto;
+        }
+
+        table{
+            width:100%;
+            border-collapse:collapse;
+            min-width:700px;
+        }
+
+        th{
+            background:#f7f9fc;
+            color:#687489;
+            text-align:left;
+            font-size:9px;
+            padding:13px;
+            border-bottom:1px solid #e9edf2;
+            white-space:nowrap;
+        }
+
+        td{
+            padding:13px;
+            border-bottom:1px solid #f0f2f6;
+            font-size:10px;
+            vertical-align:middle;
+        }
+
+        tbody tr:hover{
+            background:#fcfefd;
+        }
+
+        tbody tr:last-child td{
+            border-bottom:none;
+        }
+
+        /* =========================
+           USER TABLE
+        ========================= */
+
+        .user-id{
+            width:30px;
+            height:30px;
+            background:#eaf4ff;
+            color:#2877b8;
+            border-radius:9px;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            font-size:9px;
+            font-weight:bold;
+        }
+
+        .user-name{
+            font-size:11px;
+            font-weight:bold;
+            color:#29364d;
+        }
+
+        .email{
+            color:#758094;
+            font-size:10px;
+        }
+
+        /* =========================
+           HEALTH REPORTS
+        ========================= */
+
+        .pet-info{
+            display:flex;
+            flex-direction:column;
+            gap:3px;
+        }
+
+        .pet-name{
+            color:#29364d;
+            font-size:11px;
+            font-weight:bold;
+        }
+
+        .pet-type{
+            color:#919bab;
+            font-size:9px;
+        }
+
+        .record-type{
+            display:inline-block;
+            background:#e8f7ef;
+            color:#139560;
+            padding:6px 8px;
+            border-radius:7px;
+            font-size:9px;
+            font-weight:bold;
+        }
+
+        .date{
+            color:#667389;
+            font-size:10px;
+        }
+
+        .details-cell{
+            max-width:240px;
+            color:#6d788a;
+            line-height:1.5;
+        }
+
+        .view-btn{
+            display:inline-block;
+            text-decoration:none;
+            background:#19a66a;
+            color:white;
+            padding:8px 11px;
+            border-radius:8px;
+            font-size:9px;
+            font-weight:bold;
+            white-space:nowrap;
+            transition:.2s;
+        }
+
+        .view-btn:hover{
+            background:#128b58;
+            transform:translateY(-1px);
+        }
+
+        .no-report{
+            color:#9aa3b1;
+            font-size:9px;
+        }
+
+        .empty-row{
+            text-align:center;
+            color:#8a94a5;
+            padding:35px !important;
+        }
+
+        /* =========================
+           SYSTEM INFO
+        ========================= */
+
+        .system-info{
+            display:grid;
+            grid-template-columns:1fr 1fr 1fr;
+            gap:15px;
+            margin-top:22px;
+        }
+
+        .info-box{
+            background:white;
+            border:1px solid #edf0f5;
+            border-radius:15px;
+            padding:17px;
+        }
+
+        .info-box h3{
+            font-size:11px;
+            margin-bottom:6px;
+        }
+
+        .info-box p{
+            color:#8791a2;
+            font-size:9px;
+            line-height:1.5;
+        }
+
+        /* =========================
+           RESPONSIVE
+        ========================= */
+
+        @media(max-width:1100px){
+
+            .stats{
+                grid-template-columns:repeat(2,1fr);
+            }
+
+            .system-info{
+                grid-template-columns:1fr 1fr;
+            }
+        }
+
+        @media(max-width:750px){
+
+            .layout{
+                flex-direction:column;
+            }
+
+            .sidebar{
+                position:relative;
+                width:100%;
+                height:auto;
+            }
+
+            .main{
+                margin-left:0;
+                width:100%;
+                padding:20px;
+            }
+
+            .menu{
+                display:grid;
+                grid-template-columns:1fr 1fr;
+            }
+
+            .sidebar-bottom{
+                margin-top:15px;
+            }
+
+            .stats{
+                grid-template-columns:1fr;
+            }
+
+            .system-info{
+                grid-template-columns:1fr;
+            }
+
+            .page-header{
+                align-items:flex-start;
+                gap:12px;
+            }
+        }
+
+    </style>
+</head>
+
+<body>
+
+<div class="layout">
+
+    <!-- =========================
+         SIDEBAR
+    ========================= -->
+
+    <aside class="sidebar">
+
+        <div class="logo">
+
+            <div class="logo-icon">
+                🐾
+            </div>
+
+            <div>
+                PetCare <span>AI</span>
+            </div>
+
+        </div>
+
+        <div class="admin-label">
+            Admin Panel
+        </div>
+
+        <nav class="menu">
+
+            <a href="/admin" class="active">
+
+                <span class="menu-icon">
+                    📊
+                </span>
+
+                Dashboard
+
+            </a>
+
+            <a href="/admin/users">
+    <span class="menu-icon">👥</span>
+    Users
+</a>
+
+            <a href="/admin/pets">
+    <span class="menu-icon">🐾</span>
+    Pets
+</a>
+
+            <a href="/admin/vaccinations">
+    <span class="menu-icon">💉</span>
+    Vaccinations
+</a>
+
+           <a href="/admin/health-reports">
+    <span class="menu-icon">📋</span>
+    Health Reports
+</a>
+
+        </nav>
+
+        <div class="sidebar-bottom">
+
+            <div class="admin-user">
+
+                <div class="admin-user-title">
+                    Logged in as
+                </div>
+
+                <div class="admin-user-name">
+                    PetCare Administrator
+                </div>
+
+            </div>
+
+            <a
+                href="{{ url_for('admin_logout') }}"
+                class="logout"
+            >
+                ⇥ &nbsp; Logout
+            </a>
+
+        </div>
+
+    </aside>
+
+
+    <!-- =========================
+         MAIN
+    ========================= -->
+
+    <main class="main">
+
+        <!-- HEADER -->
+
+        <div class="page-header">
+
+            <div class="page-title">
+
+                <h1>
+                    Admin Dashboard 👨‍💻
+                </h1>
+
+                <p>
+                    Monitor users, pets, vaccinations and health records.
+                </p>
+
+            </div>
+
+            <div class="header-badge">
+                ● System Active
+            </div>
+
+        </div>
+
+
+        <!-- =========================
+             STATISTICS
+        ========================= -->
+
+        <div class="stats">
+
+            <!-- USERS -->
+
+            <div class="stat-card">
+
+                <div class="stat-top">
+
+                    <div class="stat-icon green-icon">
+                        👥
+                    </div>
+
+                    <div class="stat-line"></div>
+
+                </div>
+
+                <div class="stat-number">
+                    {{ total_users }}
+                </div>
+
+                <div class="stat-label">
+                    Total Users
+                </div>
+
+            </div>
+
+
+            <!-- PETS -->
+
+            <div class="stat-card">
+
+                <div class="stat-top">
+
+                    <div class="stat-icon blue-icon">
+                        🐾
+                    </div>
+
+                    <div class="stat-line"></div>
+
+                </div>
+
+                <div class="stat-number">
+                    {{ total_pets }}
+                </div>
+
+                <div class="stat-label">
+                    Total Pets
+                </div>
+
+            </div>
+
+
+            <!-- VACCINATIONS -->
+
+            <div class="stat-card">
+
+                <div class="stat-top">
+
+                    <div class="stat-icon pink-icon">
+                        💉
+                    </div>
+
+                    <div class="stat-line"></div>
+
+                </div>
+
+                <div class="stat-number">
+                    {{ total_vaccinations }}
+                </div>
+
+                <div class="stat-label">
+                    Vaccinations
+                </div>
+
+            </div>
+
+
+            <!-- HEALTH RECORDS -->
+
+            <div class="stat-card">
+
+                <div class="stat-top">
+
+                    <div class="stat-icon yellow-icon">
+                        🩺
+                    </div>
+
+                    <div class="stat-line"></div>
+
+                </div>
+
+                <div class="stat-number">
+                    {{ total_health_records }}
+                </div>
+
+                <div class="stat-label">
+                    Health Records
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- =========================
+             CONTENT
+        ========================= -->
+
+        <div class="content-grid">
+
+
+            <!-- =========================
+                 REGISTERED USERS
+            ========================= -->
+
+            <div class="table-card">
+
+                <div class="table-header">
+
+                    <div>
+
+                        <h2>
+                            Registered Users
+                        </h2>
+
+                        <p>
+                            All registered PetCare AI users.
+                        </p>
+
+                    </div>
+
+                    <div class="count-badge">
+                        {{ total_users }} Users
+                    </div>
+
+                </div>
+
+
+                <div class="table-wrapper">
+
+                    <table>
+
+                        <thead>
+
+                            <tr>
+                                <th>ID</th>
+                                <th>USER</th>
+                                <th>EMAIL ADDRESS</th>
+                            </tr>
+
+                        </thead>
+
+                        <tbody>
+
+                            {% for user in users %}
+
+                            <tr>
+
+                                <td>
+
+                                    <div class="user-id">
+                                        {{ user.id }}
+                                    </div>
+
+                                </td>
+
+                                <td>
+
+                                    <div class="user-name">
+                                        {{ user.name }}
+                                    </div>
+
+                                </td>
+
+                                <td>
+
+                                    <div class="email">
+                                        {{ user.email }}
+                                    </div>
+
+                                </td>
+
+                            </tr>
+
+                            {% else %}
+
+                            <tr>
+
+                                <td
+                                    colspan="3"
+                                    class="empty-row"
+                                >
+                                    No registered users found.
+                                </td>
+
+                            </tr>
+
+                            {% endfor %}
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+
+            <!-- =========================
+                 HEALTH REPORTS
+            ========================= -->
+
+            <div class="table-card">
+
+                <div class="table-header">
+
+                    <div>
+
+                        <h2>
+                            Health Reports
+                        </h2>
+
+                        <p>
+                            View all users' pet health records and uploaded reports.
+                        </p>
+
+                    </div>
+
+                    <div class="count-badge">
+                        {{ total_health_records }} Records
+                    </div>
+
+                </div>
+
+
+                <div class="table-wrapper">
+
+                    <table>
+
+                        <thead>
+
+                            <tr>
+
+                                <th>
+                                    USER
+                                </th>
+
+                                <th>
+                                    EMAIL
+                                </th>
+
+                                <th>
+                                    PET
+                                </th>
+
+                                <th>
+                                    RECORD TYPE
+                                </th>
+
+                                <th>
+                                    DATE
+                                </th>
+
+                                <th>
+                                    DETAILS
+                                </th>
+
+                                <th>
+                                    REPORT
+                                </th>
+
+                            </tr>
+
+                        </thead>
+
+
+                        <tbody>
+
+                            {% for report in health_reports %}
+
+                            <tr>
+
+                                <!-- USER -->
+
+                                <td>
+
+                                    <div class="user-name">
+                                        {{ report.user_name }}
+                                    </div>
+
+                                </td>
+
+
+                                <!-- EMAIL -->
+
+                                <td>
+
+                                    <div class="email">
+                                        {{ report.user_email }}
+                                    </div>
+
+                                </td>
+
+
+                                <!-- PET -->
+
+                                <td>
+
+                                    <div class="pet-info">
+
+                                        <div class="pet-name">
+                                            {{ report.pet_name }}
+                                        </div>
+
+                                        <div class="pet-type">
+                                            {{ report.pet_type }}
+                                        </div>
+
+                                    </div>
+
+                                </td>
+
+
+                                <!-- RECORD TYPE -->
+
+                                <td>
+
+                                    <span class="record-type">
+                                        {{ report.record_type }}
+                                    </span>
+
+                                </td>
+
+
+                                <!-- DATE -->
+
+                                <td>
+
+                                    <span class="date">
+                                        {{ report.record_date }}
+                                    </span>
+
+                                </td>
+
+
+                                <!-- DETAILS -->
+
+                                <td class="details-cell">
+
+                                    {{ report.details }}
+
+                                </td>
+
+
+                                <!-- REPORT -->
+
+                                <td>
+
+                                    {% if report.report_file %}
+
+                                    <a
+                                        href="{{ url_for(
+                                            'static',
+                                            filename='uploads/' + report.report_file
+                                        ) }}"
+                                        target="_blank"
+                                        class="view-btn"
+                                    >
+                                        View Report
+                                    </a>
+
+                                    {% else %}
+
+                                    <span class="no-report">
+                                        No Report
+                                    </span>
+
+                                    {% endif %}
+
+                                </td>
+
+                            </tr>
+
+                            {% else %}
+
+                            <tr>
+
+                                <td
+                                    colspan="7"
+                                    class="empty-row"
+                                >
+                                    No health reports found.
+                                </td>
+
+                            </tr>
+
+                            {% endfor %}
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+
+        <!-- =========================
+             SYSTEM INFO
+        ========================= -->
+
+        <div class="system-info">
+
+            <div class="info-box">
+
+                <h3>
+                    👥 User Management
+                </h3>
+
+                <p>
+                    View registered PetCare AI users and their account information.
+                </p>
+
+            </div>
+
+
+            <div class="info-box">
+
+                <h3>
+                    🐾 Pet Monitoring
+                </h3>
+
+                <p>
+                    Monitor pet records and vaccination activity stored in the system.
+                </p>
+
+            </div>
+
+
+            <div class="info-box">
+
+                <h3>
+                    📋 Health Reports
+                </h3>
+
+                <p>
+                    Review users' health records and uploaded doctor reports.
+                </p>
+
+            </div>
+
+        </div>
+
+
+    </main>
+
+</div>
+
+</body>
+</html>
